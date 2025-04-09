@@ -960,7 +960,7 @@
                         </div>
                         
                         <div class="form-group text-center">
-                            <button type="submit" class="btn-ancient">Den Soulrider-Eid ablegen</button>
+                            <button type="submit" class="btn-ancient" id="submit-btn">Den Soulrider-Eid ablegen</button>
                         </div>
                     </form>
                 </div>
@@ -1462,6 +1462,12 @@
                     const riderHorse = document.getElementById('rider-horse').value;
                     const riderMessage = document.getElementById('rider-message').value;
                     
+                    // Show loading state
+                    const submitBtn = document.getElementById('submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = "Sende Eid...";
+                    submitBtn.disabled = true;
+                    
                     // Prepare data for Discord
                     const message = {
                         content: "Neuer Soulrider-Eid",
@@ -1498,35 +1504,37 @@
                         ]
                     };
                     
-                    // Send to Discord webhook (obfuscated URL)
-                    sendToDiscord(message);
-                    
-                    // Show success message
-                    const submitBtn = soulriderForm.querySelector('button[type="submit"]');
-                    const originalText = submitBtn.textContent;
-                    submitBtn.textContent = "Eid empfangen...";
-                    submitBtn.disabled = true;
-                    
-                    setTimeout(() => {
-                        submitBtn.textContent = "Dein Ruf wurde gehört!";
-                        
-                        // Reset form
-                        setTimeout(() => {
-                            soulriderForm.reset();
-                            submitBtn.textContent = originalText;
-                            submitBtn.disabled = false;
-                        }, 3000);
-                    }, 1500);
+                    // Send to Discord webhook
+                    sendToDiscord(message, function(success) {
+                        if (success) {
+                            // Show success message
+                            submitBtn.textContent = "Dein Ruf wurde gehört!";
+                            
+                            // Reset form
+                            setTimeout(() => {
+                                soulriderForm.reset();
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        } else {
+                            // Show error message
+                            submitBtn.textContent = "Etwas ist schiefgelaufen!";
+                            setTimeout(() => {
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        }
+                    });
                 });
             }
             
             // Obfuscated Discord webhook sender
-            function sendToDiscord(message) {
+            function sendToDiscord(message, callback) {
                 // Decode the encrypted webhook parts
                 const encodedParts = [
                     "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv", // Base URL
                     "MTM1OTU5NDk5ODkzNjUwMjQxNA==", // ID
-                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token
+                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token - Corrected
                 ];
                 
                 // XOR key (simple obfuscation)
@@ -1546,39 +1554,35 @@
                     return result;
                 }
                 
-                // Further obfuscation by decoding parts at different times
+                // Decode all parts immediately to avoid timing issues
                 const baseUrl = decodeWithXOR(encodedParts[0], xorKey);
+                const id = decodeWithXOR(encodedParts[1], xorKey);
+                const token = decodeWithXOR(encodedParts[2], xorKey);
                 
-                // Add a delay to make static analysis harder
-                setTimeout(() => {
-                    const id = decodeWithXOR(encodedParts[1], xorKey);
-                    
-                    // Additional delay for the token
-                    setTimeout(() => {
-                        const token = decodeWithXOR(encodedParts[2], xorKey);
-                        
-                        // Assemble the URL only at the last moment
-                        const webhookUrl = baseUrl + id + "/" + token;
-                        
-                        // Send the data
-                        fetch(webhookUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(message)
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.text();
-                        })
-                        .catch(error => {
-                            console.error('Error sending to Discord:', error);
-                        });
-                    }, 50); // Small delay
-                }, 50); // Small delay
+                // Assemble the URL
+                const webhookUrl = baseUrl + id + "/" + token;
+                
+                // Send the data
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(message)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(() => {
+                    if (callback) callback(true);
+                })
+                .catch(error => {
+                    console.error('Error sending to Discord:', error);
+                    if (callback) callback(false);
+                });
             }
         });
         
