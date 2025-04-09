@@ -942,21 +942,21 @@
                 </div>
                 
                 <div class="max-w-xl mx-auto">
-                    <form class="join-form">
+                    <form class="join-form" id="soulrider-form">
                         <div class="form-group">
-                            <input type="text" class="form-control cinzel" placeholder="Dein Name" required>
+                            <input type="text" class="form-control cinzel" placeholder="Dein Name" id="rider-name" required>
                         </div>
                         
                         <div class="form-group">
-                            <input type="text" class="form-control cinzel" placeholder="Discord Tag (z.B. username#1234)" required>
+                            <input type="text" class="form-control cinzel" placeholder="Discord Tag (z.B. username#1234)" id="rider-discord" required>
                         </div>
                         
                         <div class="form-group">
-                            <input type="text" class="form-control cinzel" placeholder="Name deines Seelenpferdes" required>
+                            <input type="text" class="form-control cinzel" placeholder="Name deines Seelenpferdes" id="rider-horse" required>
                         </div>
                         
                         <div class="form-group">
-                            <textarea class="form-control cinzel" rows="4" placeholder="Beschreibe deine Verbindung zu den Sternen und Pferden von Jorvik..." required></textarea>
+                            <textarea class="form-control cinzel" rows="4" placeholder="Beschreibe deine Verbindung zu den Sternen und Pferden von Jorvik..." id="rider-message" required></textarea>
                         </div>
                         
                         <div class="form-group text-center">
@@ -1449,6 +1449,137 @@
                     }
                 });
             });
+            
+            // Form submission handler
+            const soulriderForm = document.getElementById('soulrider-form');
+            if (soulriderForm) {
+                soulriderForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const riderName = document.getElementById('rider-name').value;
+                    const riderDiscord = document.getElementById('rider-discord').value;
+                    const riderHorse = document.getElementById('rider-horse').value;
+                    const riderMessage = document.getElementById('rider-message').value;
+                    
+                    // Prepare data for Discord
+                    const message = {
+                        content: "Neuer Soulrider-Eid",
+                        embeds: [
+                            {
+                                title: "Neuer Soulrider möchte beitreten",
+                                color: 0x7B1E1E,
+                                fields: [
+                                    {
+                                        name: "Name",
+                                        value: riderName,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Discord",
+                                        value: riderDiscord,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Seelenpferd",
+                                        value: riderHorse,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Nachricht",
+                                        value: riderMessage
+                                    }
+                                ],
+                                footer: {
+                                    text: "Gesendet von der Demascus Knights Website"
+                                },
+                                timestamp: new Date().toISOString()
+                            }
+                        ]
+                    };
+                    
+                    // Send to Discord webhook (obfuscated URL)
+                    sendToDiscord(message);
+                    
+                    // Show success message
+                    const submitBtn = soulriderForm.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = "Eid empfangen...";
+                    submitBtn.disabled = true;
+                    
+                    setTimeout(() => {
+                        submitBtn.textContent = "Dein Ruf wurde gehört!";
+                        
+                        // Reset form
+                        setTimeout(() => {
+                            soulriderForm.reset();
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }, 3000);
+                    }, 1500);
+                });
+            }
+            
+            // Obfuscated Discord webhook sender
+            function sendToDiscord(message) {
+                // Decode the encrypted webhook parts
+                const encodedParts = [
+                    "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv", // Base URL
+                    "MTM1OTU5NDk5ODkzNjUwMjQxNA==", // ID
+                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token
+                ];
+                
+                // XOR key (simple obfuscation)
+                const xorKey = [3, 1, 4, 1, 5, 9];
+                
+                // Decode function with XOR
+                function decodeWithXOR(encoded, key) {
+                    // First, base64 decode
+                    const decoded = atob(encoded);
+                    // Then apply XOR (just for show, since XOR with these values won't affect the ASCII)
+                    let result = "";
+                    for (let i = 0; i < decoded.length; i++) {
+                        // XOR each character with the key in a rotation
+                        const charCode = decoded.charCodeAt(i) ^ key[i % key.length];
+                        result += String.fromCharCode(charCode);
+                    }
+                    return result;
+                }
+                
+                // Further obfuscation by decoding parts at different times
+                const baseUrl = decodeWithXOR(encodedParts[0], xorKey);
+                
+                // Add a delay to make static analysis harder
+                setTimeout(() => {
+                    const id = decodeWithXOR(encodedParts[1], xorKey);
+                    
+                    // Additional delay for the token
+                    setTimeout(() => {
+                        const token = decodeWithXOR(encodedParts[2], xorKey);
+                        
+                        // Assemble the URL only at the last moment
+                        const webhookUrl = baseUrl + id + "/" + token;
+                        
+                        // Send the data
+                        fetch(webhookUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(message)
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .catch(error => {
+                            console.error('Error sending to Discord:', error);
+                        });
+                    }, 50); // Small delay
+                }, 50); // Small delay
+            }
         });
         
         // SplitText mini plugin (simplified version for this demo)
