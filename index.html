@@ -754,7 +754,7 @@
         
         .ritual-active .ritual-overlay {
             opacity: 1;
-            pointer-events: all;
+            pointer-events: auto;
         }
         
         .close-ritual {
@@ -798,12 +798,16 @@
         .ritual-choice:hover {
             transform: scale(1.05);
         }
+        
+        .ritual-active {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
     <!-- Ritual Effect -->
     <div class="ritual-overlay"></div>
-    <div class="ritual-container" id="ritualContainer">
+    <div class="ritual-container" id="ritualContainer" style="display: none;">
         <div class="ritual-circle">
             <div class="ritual-sigil"></div>
             <div class="ritual-rays"></div>
@@ -1069,7 +1073,8 @@
                 particle.style.top = `${y}px`;
             }
             
-            ritualTrigger.addEventListener('click', function() {
+            // Ritual Trigger Handler Function
+            function handleRitualTrigger() {
                 body.classList.add('ritual-active');
                 
                 // Show the overlay
@@ -1085,6 +1090,7 @@
                 // Show the ritual container
                 gsap.to(ritualContainer, {
                     opacity: 1,
+                    display: "flex",
                     duration: 1.5,
                     delay: 0.5
                 });
@@ -1232,20 +1238,25 @@
                         gsap.to(ritualMessage, {
                             opacity: 0,
                             y: -50,
-                            duration: 0.7
+                            duration: 0.7,
+                            display: "none"
                         });
                         
                         gsap.to(ritualCircle, {
                             opacity: 0,
                             scale: 1.5,
                             duration: 1.2,
-                            ease: "power2.in"
+                            ease: "power2.in",
+                            display: "none"
                         });
                         
                         gsap.to('.ritual-rays', {
                             opacity: 0,
-                            duration: 0.8
+                            duration: 0.8,
+                            display: "none"
                         });
+
+                        ritualCircle.style.display = "none";
                         
                         // Dramatic flash effect
                         const flash = document.createElement('div');
@@ -1287,7 +1298,8 @@
                         gsap.to(ritualContainer, {
                             opacity: 0,
                             duration: 1,
-                            delay: 0.8
+                            delay: 0.8,
+                            display: "none"
                         });
                         
                         gsap.to(ritualOverlay, {
@@ -1296,6 +1308,20 @@
                             delay: 1,
                             onComplete: () => {
                                 body.classList.remove('ritual-active');
+                                ritualOverlay.style.pointerEvents = 'none';
+                                
+                                // Reset ritual choice buttons
+                                document.querySelectorAll('.ritual-choice').forEach(btn => {
+                                    btn.style.backgroundColor = '';
+                                });
+                                
+                                // Reset any lingering animations or states
+                                gsap.set(ritualMessage, { clearProps: "all" });
+                                gsap.set(ritualMessage, { opacity: 0, y: 0 });
+                                gsap.set(ritualCircle, { clearProps: "all" });
+                                gsap.set(ritualCircle, { opacity: 0, scale: 0.5 });
+                                gsap.set('.ritual-rays', { clearProps: "all" });
+                                gsap.set('.ritual-rays', { opacity: 0 });
                                 
                                 // Scroll to the join form
                                 const joinSection = document.getElementById('beitreten');
@@ -1352,7 +1378,8 @@
                     gsap.to(ritualContainer, {
                         opacity: 0,
                         duration: 1,
-                        delay: 0.5
+                        delay: 0.5,
+                        display: "none"
                     });
                     
                     gsap.to(ritualOverlay, {
@@ -1361,6 +1388,20 @@
                         delay: 0.8,
                         onComplete: () => {
                             body.classList.remove('ritual-active');
+                            ritualOverlay.style.pointerEvents = 'none';
+                            
+                            // Reset ritual choice buttons
+                            document.querySelectorAll('.ritual-choice').forEach(btn => {
+                                btn.style.backgroundColor = '';
+                            });
+                            
+                            // Reset any lingering animations or states
+                            gsap.set(ritualMessage, { clearProps: "all" });
+                            gsap.set(ritualMessage, { opacity: 0, y: 0 });
+                            gsap.set(ritualCircle, { clearProps: "all" });
+                            gsap.set(ritualCircle, { opacity: 0, scale: 0.5 });
+                            gsap.set('.ritual-rays', { clearProps: "all" });
+                            gsap.set('.ritual-rays', { opacity: 0 });
                         }
                     });
                     
@@ -1372,7 +1413,10 @@
                     // Remove this event listener to prevent multiple bindings
                     closeRitual.removeEventListener('click', closeHandler);
                 });
-            });
+            }
+            
+            // Attach the ritual trigger
+            ritualTrigger.addEventListener('click', handleRitualTrigger);
             
             // Mobile menu toggle
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
