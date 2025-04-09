@@ -657,6 +657,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
         
         .ritual-circle {
@@ -779,6 +780,24 @@
             background-color: rgba(123, 30, 30, 0.4);
             color: var(--pale-gold);
         }
+        
+        .ritual-message {
+            position: relative;
+            z-index: 16;
+            max-width: 600px;
+            margin: 0 auto;
+            pointer-events: auto;
+        }
+        
+        .ritual-choice {
+            transition: all 0.4s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        
+        .ritual-choice:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -790,6 +809,13 @@
             <div class="ritual-rays"></div>
             <div class="ritual-text"></div>
             <div class="ritual-particles" id="ritualParticles"></div>
+        </div>
+        <div class="ritual-message cinzel text-center text-[var(--pale-gold)] mt-12 opacity-0" id="ritualMessage">
+            <h3 class="text-2xl mb-4">Wähle deinen Pfad, Soulrider</h3>
+            <div class="flex justify-center space-x-6 mt-8">
+                <button class="btn-ancient ritual-choice" data-choice="light">Pfad des Lichts</button>
+                <button class="btn-ancient ritual-choice" data-choice="shadow">Pfad des Schattens</button>
+            </div>
         </div>
     </div>
     <div class="close-ritual" id="closeRitual">×</div>
@@ -927,7 +953,11 @@
                         <p class="opacity-80 relative z-1">Hüter des Jorvik-Sterns und Meister der alten Reit-Kampfkunst. Sein legendäres Pferd, ein Nachkomme der Sternenpferde, trägt das Mal des Schutzes. "Zwischen Himmel und Erde findet der wahre Kampf statt - in den Herzen der Reiter."</p>
                     </div>
                     
-                    
+                    <div class="guardian-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="guardian-icon">✧</div>
+                        <h3 class="guardian-title text-xl mb-3">Magister Lea</h3>
+                        <p class="opacity-80 relative z-1">Die weise und mächtige Magisterin, die die Geheimnisse der magischen Pferde von Jorvik bewahrt. Ihre Verbindung zu den Sternen ist tief und mystisch. "Die Sterne leiten uns, die Dunkelheit verfolgen wir."</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -1020,6 +1050,7 @@
             const ritualOverlay = document.querySelector('.ritual-overlay');
             const closeRitual = document.getElementById('closeRitual');
             const ritualParticles = document.getElementById('ritualParticles');
+            const ritualMessage = document.getElementById('ritualMessage');
             const body = document.querySelector('body');
             
             // Create ritual particles
@@ -1044,7 +1075,11 @@
                 // Show the overlay
                 gsap.to(ritualOverlay, {
                     opacity: 1,
-                    duration: 1
+                    duration: 1,
+                    onComplete: function() {
+                        // Make the overlay clickable
+                        ritualOverlay.style.pointerEvents = 'auto';
+                    }
                 });
                 
                 // Show the ritual container
@@ -1108,6 +1143,14 @@
                     });
                 });
                 
+                // Show the ritual message after animation completes
+                gsap.to(ritualMessage, {
+                    opacity: 1,
+                    y: -20,
+                    duration: 1.5,
+                    delay: 3.5
+                });
+                
                 // Add an eerie sound effect
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 
@@ -1160,6 +1203,130 @@
                 // Play random notes every few seconds
                 const noteInterval = setInterval(playRandomNote, 4000);
                 
+                // Add event listeners to the ritual choices
+                document.querySelectorAll('.ritual-choice').forEach(choice => {
+                    choice.addEventListener('click', function() {
+                        // Play a confirmation sound
+                        const confirmOsc = audioContext.createOscillator();
+                        const confirmGain = audioContext.createGain();
+                        
+                        confirmOsc.type = 'sine';
+                        confirmOsc.frequency.value = this.dataset.choice === 'light' ? 440 : 330;
+                        
+                        confirmGain.gain.value = 0;
+                        
+                        confirmOsc.connect(confirmGain);
+                        confirmGain.connect(audioContext.destination);
+                        
+                        confirmOsc.start();
+                        
+                        // Fade in and out
+                        confirmGain.gain.setValueAtTime(0, audioContext.currentTime);
+                        confirmGain.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.1);
+                        confirmGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                        
+                        // Visual feedback on selection
+                        this.style.backgroundColor = this.dataset.choice === 'light' ? 'rgba(212, 175, 55, 0.6)' : 'rgba(123, 30, 30, 0.8)';
+                        
+                        // Close the ritual with a different animation
+                        gsap.to(ritualMessage, {
+                            opacity: 0,
+                            y: -50,
+                            duration: 0.7
+                        });
+                        
+                        gsap.to(ritualCircle, {
+                            opacity: 0,
+                            scale: 1.5,
+                            duration: 1.2,
+                            ease: "power2.in"
+                        });
+                        
+                        gsap.to('.ritual-rays', {
+                            opacity: 0,
+                            duration: 0.8
+                        });
+                        
+                        // Dramatic flash effect
+                        const flash = document.createElement('div');
+                        flash.style.position = 'fixed';
+                        flash.style.top = '0';
+                        flash.style.left = '0';
+                        flash.style.width = '100%';
+                        flash.style.height = '100%';
+                        flash.style.backgroundColor = this.dataset.choice === 'light' ? '#D4AF37' : '#7B1E1E';
+                        flash.style.opacity = '0';
+                        flash.style.zIndex = '100';
+                        flash.style.pointerEvents = 'none';
+                        document.body.appendChild(flash);
+                        
+                        gsap.to(flash, {
+                            opacity: 0.4,
+                            duration: 0.2,
+                            onComplete: () => {
+                                gsap.to(flash, {
+                                    opacity: 0,
+                                    duration: 0.5,
+                                    delay: 0.1,
+                                    onComplete: () => {
+                                        flash.remove();
+                                    }
+                                });
+                            }
+                        });
+                        
+                        // Stop audio
+                        clearInterval(noteInterval);
+                        ambientGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                        setTimeout(() => {
+                            ambientOsc.stop();
+                            confirmOsc.stop();
+                        }, 1000);
+                        
+                        // Hide all ritual elements
+                        gsap.to(ritualContainer, {
+                            opacity: 0,
+                            duration: 1,
+                            delay: 0.8
+                        });
+                        
+                        gsap.to(ritualOverlay, {
+                            opacity: 0,
+                            duration: 1,
+                            delay: 1,
+                            onComplete: () => {
+                                body.classList.remove('ritual-active');
+                                
+                                // Scroll to the join form
+                                const joinSection = document.getElementById('beitreten');
+                                gsap.to(window, {
+                                    duration: 1.5,
+                                    scrollTo: joinSection.offsetTop - 50,
+                                    ease: "power2.inOut",
+                                    delay: 0.5
+                                });
+                                
+                                // Highlight the form with a subtle glow
+                                const form = document.querySelector('.join-form');
+                                gsap.fromTo(form, 
+                                    { boxShadow: '0 0 0 rgba(212, 175, 55, 0)' },
+                                    { 
+                                        boxShadow: '0 0 30px rgba(212, 175, 55, 0.5)',
+                                        duration: 2,
+                                        repeat: 3,
+                                        yoyo: true
+                                    }
+                                );
+                            }
+                        });
+                        
+                        gsap.to(closeRitual, {
+                            opacity: 0,
+                            duration: 0.5
+                        });
+                    });
+                });
+                
                 // Clean up on close
                 closeRitual.addEventListener('click', function closeHandler() {
                     // Stop the audio
@@ -1169,16 +1336,17 @@
                         ambientOsc.stop();
                     }, 1000);
                     
+                    // Hide the ritual message
+                    gsap.to(ritualMessage, {
+                        opacity: 0,
+                        duration: 0.5
+                    });
+                    
                     // Hide the ritual elements
                     gsap.to(ritualCircle, {
                         opacity: 0,
                         scale: 0.5,
                         duration: 1
-                    });
-                    
-                    gsap.to('.ritual-rays', {
-                        opacity: 0,
-                        duration: 0.5
                     });
                     
                     gsap.to(ritualContainer, {
@@ -1571,7 +1739,7 @@
                 console.log("Webhook URL assembled");
                 
                 // Send the data
-                fetch("https://discord.com/api/webhooks/1359594998936502414/8jji0PyAX_znABPCIT7B3L0I8FPvTdt7BCLesM2EInfanmQTceFT58bkPJ7RPWH5ihVI", {
+                fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
