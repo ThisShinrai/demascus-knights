@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Outfit & Pferd | Demascus Knights</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    
+    <!-- Google Fonts - Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    :root {
+        --deep-black: #000;
+        --wine-red: #7B1E1E;
+        --flame-red: #D12F2F;
+        --pale-gold: #C9B037;
+        --dark-gold: #9A7D0A;
+        --antique-gold: #BE8A0D;
+        --rich-gold: #D4AF37;
+        --dark-shadow: #120c0c;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        background-color: var(--deep-black);
+        color: #f0f0f0;
+        font-family: 'IM Fell English SC', serif;
+        overflow-x: hidden;
+        position: relative;
+    }
+    
+    .cinzel {
+        font-family: 'Cinzel Decorative', serif;
+    }
+    
+    .hero {
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(51,0,0,0.4) 100%);
+        z-index: 1;
+    }
+    
+    .ruins-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('https://images.unsplash.com/photo-1564419188567-78d705163c95?auto=format&fit=crop&q=80');
+        background-size: cover;
+        background-position: center;
+        filter: brightness(0.3) contrast(1.3) saturate(0.5) sepia(0.2);
+        z-index: 0;
+    }
+    
+    .blood-vignette {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(ellipse at center, transparent 40%, rgba(123, 30, 30, 0.5) 100%);
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.6;
+    }
+    
+    .fog-layer {
+        position: absolute;
+        width: 200%;
+        height: 100%;
+        top: 0;
+        left: -50%;
+        background-image: url('https://assets.codepen.io/721952/fog.png');
+        background-size: cover;
+        opacity: 0.15;
+        z-index: 2;
+        mix-blend-mode: overlay;
+    }
+    
+    .ember-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        overflow: hidden;
+        z-index: 2;
+    }
+    
+    .ember {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: var(--flame-red);
+        border-radius: 50%;
+        opacity: 0;
+        filter: blur(1px);
+        box-shadow: 0 0 10px 2px rgba(209, 47, 47, 0.6);
+    }
+    
+    .crest {
+        position: relative;
+        z-index: 3;
+        width: 180px;
+        height: 180px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='%23BE8A0D' d='M60 10 C40 10, 10 25, 10 60 C10 85, 30 110, 60 110 C90 110, 110 85, 110 60 C110 25, 80 10, 60 10 Z'/%3E%3Cpath fill='%237B1E1E' d='M60 20 C45 20, 20 35, 20 60 C20 80, 35 100, 60 100 C85 100, 100 80, 100 60 C100 35, 75 20, 60 20 Z'/%3E%3Cpath fill='%23000' d='M60 30 C50 30, 35 40, 35 60 C35 75, 45 90, 60 90 C75 90, 85 75, 85 60 C85 40, 70 30, 60 30 Z'/%3E%3Cpath fill='%23D4AF37' d='M40 45 L80 45 L80 75 L40 75 Z'/%3E%3Cpath fill='%23D4AF37' d='M55 30 L65 30 L65 90 L55 90 Z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 0 auto;
+        filter: drop-shadow(0 0 10px rgba(209, 47, 47, 0.5)) drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+    }
+    
+    .btn-ancient {
+        background-color: rgba(123, 30, 30, 0.6);
+        border: 2px solid var(--dark-gold);
+        color: var(--antique-gold);
+        font-family: 'Cinzel Decorative', serif;
+        letter-spacing: 2px;
+        padding: 1rem 2rem;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+    
+    .btn-ancient::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(209, 47, 47, 0.4), transparent);
+        transition: all 0.8s ease;
+    }
+    
+    .btn-ancient:hover {
+        box-shadow: 0 0 20px rgba(209, 47, 47, 0.7), 0 0 30px rgba(154, 125, 10, 0.3);
+        background-color: rgba(123, 30, 30, 0.8);
+        color: var(--pale-gold);
+    }
+    
+    .btn-ancient:hover::before {
+        left: 100%;
+    }
+    
+    /* Runic elements and decorations */
+    .rune {
+        position: absolute;
+        font-size: 1.5rem;
+        color: var(--wine-red);
+        opacity: 0.4;
+        z-index: 3;
+        text-shadow: 0 0 5px rgba(209, 47, 47, 0.5);
+    }
+    
+    .title-container {
+        position: relative;
+    }
+    
+    .title-container::before, .title-container::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 100px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--flame-red), var(--dark-gold), var(--flame-red), transparent);
+    }
+    
+    .title-container::before {
+        left: -120px;
+    }
+    
+    .title-container::after {
+        right: -120px;
+    }
+    
+    /* Burning effect for the title */
+    @keyframes flicker {
+        0%, 100% { opacity: 0.85; text-shadow: 0 0 5px var(--rich-gold), 0 0 15px var(--wine-red), 0 0 20px rgba(0,0,0,0.7); }
+        25% { opacity: 0.9; text-shadow: 0 0 8px var(--rich-gold), 0 0 20px var(--flame-red), 0 0 25px rgba(0,0,0,0.7); }
+        50% { opacity: 0.95; text-shadow: 0 0 10px var(--rich-gold), 0 0 15px var(--wine-red), 0 0 30px rgba(0,0,0,0.7); }
+        75% { opacity: 0.9; text-shadow: 0 0 7px var(--rich-gold), 0 0 25px var(--flame-red), 0 0 35px rgba(0,0,0,0.7); }
+    }
+    
+    .flicker-text {
+        animation: flicker 4s infinite alternate;
+        letter-spacing: 3px;
+        font-weight: 900;
+        background: linear-gradient(to bottom, #f1c40f, #D4AF37, #9A7D0A);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+    }
+    
+    .royal-border {
+        position: fixed;
+        width: calc(100% - 40px);
+        height: calc(100% - 40px);
+        border: 1px solid rgba(201, 176, 55, 0.3);
+        top: 20px;
+        left: 20px;
+        z-index: 10;
+        pointer-events: none;
+    }
+    
+    .royal-border::before, .royal-border::after,
+    .royal-border > span::before, .royal-border > span::after {
+        content: '';
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        border-color: var(--dark-gold);
+        border-style: solid;
+    }
+    
+    .royal-border::before {
+        top: -1px;
+        left: -1px;
+        border-width: 2px 0 0 2px;
+    }
+    
+    .royal-border::after {
+        top: -1px;
+        right: -1px;
+        border-width: 2px 2px 0 0;
+    }
+    
+    .royal-border > span::before {
+        bottom: -1px;
+        left: -1px;
+        border-width: 0 0 2px 2px;
+    }
+    
+    .royal-border > span::after {
+        bottom: -1px;
+        right: -1px;
+        border-width: 0 2px 2px 0;
+    }
+    
+    .demon-sigil {
+        position: absolute;
+        width: 100%;
+        height: 100px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='none'%3E%3Cpath d='M50 5 L90 45 L10 45 Z' stroke='%237B1E1E' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='50' cy='25' r='10' stroke='%237B1E1E' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+        background-repeat: repeat-x;
+        background-size: 100px 50px;
+        opacity: 0.2;
+        bottom: 0;
+        z-index: 2;
+    }
+    
+    /* Section Styles */
+    .section {
+        position: relative;
+        overflow: hidden;
+        padding: 8rem 0;
+    }
+    
+    .section-dark {
+        background-color: var(--deep-black);
+        color: #f0f0f0;
+    }
+    
+    .section-dark::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 50%, rgba(123, 30, 30, 0.15), transparent 70%);
+        pointer-events: none;
+    }
+    
+    .section-title {
+        position: relative;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+    
+    .section-title::after {
+        content: '';
+        position: absolute;
+        width: 80px;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--dark-gold), transparent);
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .history-item {
+        position: relative;
+        padding-left: 2rem;
+        margin-bottom: 2.5rem;
+        border-left: 1px solid rgba(154, 125, 10, 0.3);
+    }
+    
+    .history-item::before {
+        content: '';
+        position: absolute;
+        width: 15px;
+        height: 15px;
+        left: -8px;
+        top: 5px;
+        background-color: var(--wine-red);
+        border: 2px solid var(--dark-gold);
+        border-radius: 50%;
+    }
+    
+    .history-year {
+        position: absolute;
+        left: -4rem;
+        top: 0;
+        color: var(--dark-gold);
+        font-family: 'Cinzel Decorative', serif;
+    }
+    
+    .guardian-card {
+        position: relative;
+        background: rgba(0, 0, 0, 0.6);
+        border: 1px solid rgba(154, 125, 10, 0.3);
+        padding: 1.5rem;
+        height: 100%;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+    
+    .guardian-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(123, 30, 30, 0.1) 0%, rgba(0, 0, 0, 0) 50%);
+        z-index: 0;
+    }
+    
+    .guardian-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(123, 30, 30, 0.3);
+    }
+    
+    .guardian-card:hover .guardian-icon {
+        transform: scale(1.1) rotate(5deg);
+    }
+    
+    .guardian-icon {
+        font-size: 2.5rem;
+        color: var(--dark-gold);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .guardian-title {
+        font-family: 'Cinzel Decorative', serif;
+        color: var(--antique-gold);
+        margin-bottom: 0.5rem;
+        position: relative;
+        z-index: 1;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-control {
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid rgba(154, 125, 10, 0.3);
+        color: #f0f0f0;
+        padding: 0.75rem 1rem;
+        width: 100%;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--dark-gold);
+        outline: none;
+        box-shadow: 0 0 10px rgba(154, 125, 10, 0.2);
+    }
+    
+    .form-control::placeholder {
+        color: rgba(240, 240, 240, 0.5);
+    }
+    
+    @media (max-width: 768px) {
+        .history-item {
+            padding-left: 1.5rem;
+        }
+        
+        .history-year {
+            position: relative;
+            left: 0;
+            top: 0;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+    }
+    
+    /* Navbar Styles */
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 50;
+        transition: background-color 0.3s ease;
+        margin-top: 25px;
+    }
+    
+    .navbar-scrolled {
+        background-color: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(5px);
+        border-bottom: 1px solid var(--dark-gold);
+    }
+    
+    .nav-link {
+        color: var(--pale-gold);
+        font-family: 'Cinzel Decorative', serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -2px;
+        left: 50%;
+        background: linear-gradient(90deg, transparent, var(--flame-red), var(--pale-gold), var(--flame-red), transparent);
+        transition: all 0.3s ease;
+        transform: translateX(-50%);
+    }
+    
+    .nav-link:hover {
+        color: var(--antique-gold);
+    }
+    
+    .nav-link:hover::after {
+        width: 100%;
+    }
+    
+    .nav-crest {
+        width: 40px;
+        height: 40px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='%23BE8A0D' d='M60 10 C40 10, 10 25, 10 60 C10 85, 30 110, 60 110 C90 110, 110 85, 110 60 C110 25, 80 10, 60 10 Z'/%3E%3Cpath fill='%237B1E1E' d='M60 20 C45 20, 20 35, 20 60 C20 80, 35 100, 60 100 C85 100, 100 80, 100 60 C100 35, 75 20, 60 20 Z'/%3E%3Cpath fill='%23000' d='M60 30 C50 30, 35 40, 35 60 C35 75, 45 90, 60 90 C75 90, 85 75, 85 60 C85 40, 70 30, 60 30 Z'/%3E%3Cpath fill='%23D4AF37' d='M40 45 L80 45 L80 75 L40 75 Z'/%3E%3Cpath fill='%23D4AF37' d='M55 30 L65 30 L65 90 L55 90 Z'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        margin: 0 auto;
+        filter: drop-shadow(0 0 5px rgba(209, 47, 47, 0.5));
+    }
+    
+    /* Mobile Menu */
+    .mobile-menu-btn {
+        cursor: pointer;
+    }
+    
+    .mobile-menu-btn div {
+        width: 25px;
+        height: 2px;
+        background-color: var(--dark-gold);
+        margin: 5px 0;
+        transition: all 0.3s ease;
+    }
+    
+    .menu-open .line-1 {
+        transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    
+    .menu-open .line-2 {
+        opacity: 0;
+    }
+    
+    .menu-open .line-3 {
+        transform: rotate(45deg) translate(-5px, -6px);
+    }
+    
+    .mobile-menu {
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        height: 0;
+        background-color: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+        overflow: hidden;
+        transition: height 0.5s ease;
+        z-index: 40;
+        border-bottom: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+    }
+    
+
+    
+    .mobile-menu .nav-link {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .mobile-menu.open .nav-link {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    @media (max-width: 640px) {
+        .title-container::before, .title-container::after {
+            width: 50px;
+        }
+        
+        .title-container::before {
+            left: -60px;
+        }
+        
+        .title-container::after {
+            right: -60px;
+        }
+        
+        .crest {
+            width: 150px;
+            height: 150px;
+        }
+        
+        .navbar .container {
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+    }
+    
+    /* Footer Styles */
+    .footer {
+        background-color: rgba(0, 0, 0, 0.9);
+        border-top: 1px solid var(--dark-gold);
+        padding: 3rem 0 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 50% 0%, rgba(123, 30, 30, 0.2), transparent 70%);
+        pointer-events: none;
+    }
+    
+    .footer-divider {
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--dark-gold), transparent);
+        margin: 2rem auto;
+        max-width: 200px;
+    }
+    
+    .footer-link {
+        color: var(--antique-gold);
+        position: relative;
+        padding: 0.2rem 0;
+        transition: all 0.3s ease;
+        font-family: 'Cinzel Decorative', serif;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.9rem;
+    }
+    
+    .footer-link:hover {
+        color: var(--pale-gold);
+    }
+    
+    .footer-bottom {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(123, 30, 30, 0.5);
+        font-size: 0.8rem;
+    }
+    
+    .social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--dark-gold);
+        border-radius: 50%;
+        color: var(--antique-gold);
+        margin: 0 0.5rem;
+        transition: all 0.3s ease;
+    }
+    
+    .social-icon:hover {
+        background-color: rgba(123, 30, 30, 0.4);
+        color: var(--pale-gold);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+    
+    .footer-motto {
+        font-style: italic;
+        opacity: 0.7;
+        font-family: 'IM Fell English SC', serif;
+    }
+    
+    /* Blood Ritual Effect */
+    .ritual-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 15;
+        opacity: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .ritual-circle {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    
+    .ritual-sigil {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' fill='none'%3E%3Ccircle cx='150' cy='150' r='140' stroke='%237B1E1E' stroke-width='2' opacity='0.9'/%3E%3Ccircle cx='150' cy='150' r='120' stroke='%23BE8A0D' stroke-width='1' opacity='0.8'/%3E%3Cpath d='M150 30 L150 270 M30 150 L270 150 M65 65 L235 235 M65 235 L235 65' stroke='%237B1E1E' stroke-width='1' opacity='0.7'/%3E%3Cpath d='M150 50 L190 150 L150 250 L110 150 Z' stroke='%23D12F2F' stroke-width='2' fill='%23D12F2F' fill-opacity='0.2'/%3E%3Cpath d='M70 100 L150 80 L230 100 L200 180 L100 180 Z' stroke='%23BE8A0D' stroke-width='1' opacity='0.8' fill='none'/%3E%3Ccircle cx='150' cy='150' r='30' stroke='%237B1E1E' stroke-width='3' fill='%23000' fill-opacity='0.5'/%3E%3Cpath d='M130 150 L170 150 M150 130 L150 170' stroke='%23D4AF37' stroke-width='2'/%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        filter: drop-shadow(0 0 15px rgba(209, 47, 47, 0.8));
+    }
+    
+    .ritual-rays {
+        position: absolute;
+        top: -30%;
+        left: -30%;
+        width: 160%;
+        height: 160%;
+        background: radial-gradient(ellipse at center, rgba(123, 30, 30, 0.1) 0%, transparent 70%);
+        opacity: 0;
+        animation: pulse 4s infinite alternate;
+    }
+    
+    .ritual-text {
+        position: absolute;
+        width: 200%;
+        height: 200%;
+        top: -50%;
+        left: -50%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' fill='none'%3E%3Cpath d='M400,400 m-370,0 a370,370 0 1,1 740,0 a370,370 0 1,1 -740,0' id='textPath' stroke='none'/%3E%3Ctext font-family='serif' font-size='20' fill='%23BE8A0D' opacity='0.7'%3E%3CtextPath href='%23textPath'%3EVENI SANCTE SPIRITUS ET EMITTE CAELITUS LUCIS TUAE RADIUM VENI PATER PAUPERUM VENI DATOR MUNERUM VENI LUMEN CORDIUM CONSOLATOR OPTIME DULCIS HOSPES ANIMAE DULCE REFRIGERIUM%3C/textPath%3E%3C/text%3E%3C/svg%3E");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        animation: rotate 120s linear infinite;
+    }
+    
+    .ritual-particles {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+    }
+    
+    .ritual-particle {
+        position: absolute;
+        width: 3px;
+        height: 3px;
+        background-color: var(--dark-gold);
+        border-radius: 50%;
+        filter: blur(1px);
+        box-shadow: 0 0 5px var(--dark-gold);
+    }
+    
+    @keyframes pulse {
+        0%, 100% { opacity: 0.3; transform: scale(1); }
+        50% { opacity: 0.7; transform: scale(1.05); }
+    }
+    
+    @keyframes rotate {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    
+    .ritual-trigger {
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ritual-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 14;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1s ease;
+    }
+    
+    .ritual-active .ritual-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    .close-ritual {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        color: var(--dark-gold);
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        z-index: 16;
+        border: 1px solid var(--dark-gold);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+    
+    .close-ritual:hover {
+        background-color: rgba(123, 30, 30, 0.4);
+        color: var(--pale-gold);
+    }
+    
+    .ritual-message {
+        position: relative;
+        z-index: 16;
+        max-width: 600px;
+        margin: 0 auto;
+        pointer-events: auto;
+    }
+    
+    .ritual-choice {
+        transition: all 0.4s ease;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+    
+    .ritual-choice:hover {
+        transform: scale(1.05);
+    }
+    
+    .ritual-active {
+        overflow: hidden;
+    }
+</style>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar px-4 py-2">
+        <div class="container mx-auto flex justify-between items-center px-2 sm:px-4">
+            <a href="index.html" class="flex items-center">
+                <div class="nav-crest"></div>
+                <span class="cinzel text-[var(--dark-gold)] ml-2 text-lg hidden sm:block">Demascus</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden sm:flex items-center space-x-8">
+                <a href="index.html" class="nav-link">Startseite</a>
+                <a href="index.html#geschichte" class="nav-link">Unsere Geschichte</a>
+                <a href="index.html#team" class="nav-link">Unsere Leitung</a>
+                <a href="outfit.html" class="nav-link">Outfit & Pferd</a>
+                <a href="zeiten.html" class="nav-link">Treffen & Orte</a>
+                <a href="beitreten.html" class="nav-link">Schließe Dich An</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="mobile-menu-btn sm:hidden" id="mobileMenuBtn">
+                <div class="line-1"></div>
+                <div class="line-2"></div>
+                <div class="line-3"></div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu sm:hidden" id="mobileMenu">
+        <a href="index.html" class="nav-link my-5">Startseite</a>
+        <a href="index.html#geschichte" class="nav-link my-5">Unsere Geschichte</a>
+        <a href="index.html#team" class="nav-link my-5">Unsere Leitung</a>
+        <a href="outfit.html" class="nav-link my-5">Outfit & Pferd</a>
+        <a href="zeiten.html" class="nav-link my-5">Treffen & Orte</a>
+        <a href="beitreten.html" class="nav-link my-5">Schließe Dich An</a>
+    </div>
+
+    <main class="relative pt-32">
+        <!-- Page Header -->
+        <section class="page-header relative py-20 px-4 mb-16">
+            <div class="container mx-auto text-center z-10 relative">
+                <h1 class="cinzel text-5xl md:text-6xl font-black mb-6 text-[var(--antique-gold)]">Outfit & Pferd</h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-[var(--dark-gold)] to-transparent mx-auto mb-6"></div>
+                <p class="text-xl max-w-3xl mx-auto opacity-80">Die Ausrüstung und Pferde der Demascus Knights - Erkenne einen Knight am Horizont.</p>
+            </div>
+            <div class="absolute inset-0 bg-black opacity-70 z-0"></div>
+        </section>
+
+        <!-- Outfit Section -->
+        <section class="section section-dark mb-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title cinzel text-3xl md:text-4xl text-[var(--antique-gold)]">Outfit der Knights</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl mx-auto mt-12">
+                    <!-- Light Path -->
+                     <img src="https://images.pexels.com/photos/8831914/pexels-photo-8831914.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Light Path">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Demascus Knights</h3>
+                    <p class="opacity-70 mb-4">Der alte Orden, geweiht dem Schutz der menschlichen Welt vor den Schatten, die zwischen den Realitäten lauern.</p>
+                    <p class="footer-motto">"Vigilans in tenebris, lux in umbra"</p>
+                </div>
+                
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Schnellzugriff</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="footer-link">Startseite</a></li>
+                        <li><a href="index.html#geschichte" class="footer-link">Unsere Geschichte</a></li>
+                        <li><a href="index.html#team" class="footer-link">Unser Team</a></li>
+                        <li><a href="outfit.html" class="footer-link">Outfit & Pferd</a></li>
+                        <li><a href="zeiten.html" class="footer-link">Treffen & Orte</a></li>
+                        <li><a href="beitreten.html" class="footer-link">Schließe Dich An</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Kontakt</h3>
+                    <p class="opacity-70 mb-4">Für Auserwählte, die die Zeichen sehen können. Die Pforten des Ordens öffnen sich nur für jene, die würdig sind.</p>
+                    
+                    <div class="flex mt-6">
+                        <a href="#" class="social-icon">†</a>
+                        <a href="#" class="social-icon">ᛟ</a>
+                        <a href="#" class="social-icon">☽</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom text-center opacity-50">
+                <p class="mt-2">Erschaffen von <a href="https://papsn.de" class="text-[var(--antique-gold)] hover:text-[var(--pale-gold)]" target="_blank">Epsilon (papsn.de)</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize GSAP
+            gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.querySelectorAll('.mobile-menu .nav-link');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                this.classList.toggle('menu-open');
+                mobileMenu.classList.toggle('open');
+                
+                if(mobileMenu.classList.contains('open')) {
+                    navLinks.forEach((link, index) => {
+                        gsap.to(link, {
+                            opacity: 1,
+                            y: 0,
+                            delay: 0.1 * index,
+                            duration: 0.3
+                        });
+                    });
+                } else {
+                    navLinks.forEach(link => {
+                        gsap.to(link, {
+                            opacity: 0,
+                            y: 20,
+                            duration: 0.2
+                        });
+                    });
+                }
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                
+                if(window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+            
+            // Add scroll animations
+            gsap.utils.toArray('.guardian-card').forEach(card => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

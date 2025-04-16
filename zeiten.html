@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Treffen & Orte | Demascus Knights</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    
+    <!-- Google Fonts - Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar px-4 py-2">
+        <div class="container mx-auto flex justify-between items-center px-2 sm:px-4">
+            <a href="index.html" class="flex items-center">
+                <div class="nav-crest"></div>
+                <span class="cinzel text-[var(--dark-gold)] ml-2 text-lg hidden sm:block">Demascus</span>
+            </a>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden sm:flex items-center space-x-8">
+                <a href="index.html" class="nav-link">Startseite</a>
+                <a href="index.html#geschichte" class="nav-link">Unsere Geschichte</a>
+                <a href="index.html#team" class="nav-link">Unsere Leitung</a>
+                <a href="outfit.html" class="nav-link">Outfit & Pferd</a>
+                <a href="zeiten.html" class="nav-link">Treffen & Orte</a>
+                <a href="beitreten.html" class="nav-link">Schließe Dich An</a>
+            </div>
+            
+            <!-- Mobile Menu Button -->
+            <div class="mobile-menu-btn sm:hidden" id="mobileMenuBtn">
+                <div class="line-1"></div>
+                <div class="line-2"></div>
+                <div class="line-3"></div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu -->
+    <div class="mobile-menu sm:hidden" id="mobileMenu">
+        <a href="index.html" class="nav-link my-5">Startseite</a>
+        <a href="index.html#geschichte" class="nav-link my-5">Unsere Geschichte</a>
+        <a href="index.html#team" class="nav-link my-5">Unsere Leitung</a>
+        <a href="outfit.html" class="nav-link my-5">Outfit & Pferd</a>
+        <a href="zeiten.html" class="nav-link my-5">Treffen & Orte</a>
+        <a href="beitreten.html" class="nav-link my-5">Schließe Dich An</a>
+    </div>
+
+    <main class="relative pt-32">
+        <!-- Page Header -->
+        <section class="page-header relative py-20 px-4 mb-16">
+            <div class="container mx-auto text-center z-10 relative">
+                <h1 class="cinzel text-5xl md:text-6xl font-black mb-6 text-[var(--antique-gold)]">Treffen & Orte</h1>
+                <div class="w-24 h-1 bg-gradient-to-r from-transparent via-[var(--dark-gold)] to-transparent mx-auto mb-6"></div>
+                <p class="text-xl max-w-3xl mx-auto opacity-80">Finde uns an unseren heiligen Versammlungsorten in der Welt von Jorvik.</p>
+            </div>
+            <div class="absolute inset-0 bg-black opacity-70 z-0"></div>
+        </section>
+
+        <!-- Meeting Schedule Section -->
+        <section class="section section-dark mb-20">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title cinzel text-3xl md:text-4xl text-[var(--antique-gold)]">Regelmäßige Zusammenkünfte</h2>
+                
+                <div class="max-w-4xl mx-auto mt-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Regular Meetings -->
+                        <div class="guardian-card p-8" data-aos="fade-up">
+                            <h3 class="guardian-title text-2xl mb-6">Wöchentliche Treffen</h3>
+                            <ul class="space-y-6">
+                                <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Ordens-Versammlung</h4>
+                                    <p class="opacity-80 mb-2">Jeder Mittwoch, 19:00 - 21:00 Uhr</p>
+                                    <p class="italic opacity-60">Vollständige Anwesenheit aller Mitglieder erwünscht</p>
+                                </li>
+                                
+                                <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Training der Soulrider</h4>
+                                    <p class="opacity-80 mb-2">Jeden Samstag, 16:00 - 18:00 Uhr</p>
+                                    <p class="italic opacity-60">Kampftraining und magische Studien</p>
+                                </li>
+                                
+                                <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Pferde-Ausritt</h4>
+                                    <p class="opacity-80 mb-2">Jeden Sonntag, 14:00 - 16:00 Uhr</p>
+                                    <p class="italic opacity-60">Gemeinsames Ausreiten und Stärken der Pferdebindung</p>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Special Events -->
+                        <div class="guardian-card p-8" data-aos="fade-up" data-aos-delay="100">
+                            <h3 class="guardian-title text-2xl mb-6">Besondere Ereignisse</h3>
+                            <ul class="space-y-6">
+                                <li class="border-l-2 border-[var(--wine-red)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Make It Meme</h4>
+                                    <p class="italic opacity-60">Nach Absprache</p>
+                                </li>
+                                
+                                <li class="border-l-2 border-[var(--wine-red)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Movie Night</h4>
+                                    <p class="italic opacity-60">Nach Absprache</p>
+                                </li>
+                                
+                                <li class="border-l-2 border-[var(--wine-red)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Skribble</h4>
+                                    <p class="italic opacity-60">Nach Absprache</p>
+                                </li>
+                                <li class="border-l-2 border-[var(--wine-red)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">und mehr...</h4>
+                                    <p class="italic opacity-60">Nach Absprache</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Meeting Location Section -->
+        <section class="section section-dark">
+            <div class="container mx-auto px-4">
+                <h2 class="section-title cinzel text-3xl md:text-4xl text-[var(--antique-gold)]">Unser heiliger Ort</h2>
+                
+                <div class="max-w-5xl mx-auto mt-12">
+                    <!-- Primary Location -->
+                    <div class="guardian-card p-8 mb-12" data-aos="fade-up">
+                        <h3 class="guardian-title text-2xl mb-6 text-center">Hauptquartier: Silverglade Landgut</h3>
+                        <div class="relative mb-8 overflow-hidden rounded-lg h-80">
+                            <img src="https://placehold.co/800x400/7B1E1E/C9B037?text=Silverglade+Manor" alt="Silverglade Landgut" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+                            <div class="absolute bottom-0 left-0 p-6">
+                                <p class="text-[var(--pale-gold)] font-bold">Stammplatz der Demascus Knights</p>
+                                <p class="opacity-80">Silverglade, hinter der Bibliothek</p>
+                            </div>
+                        </div>
+                        <p class="opacity-80 mb-6">Das Silverglade Landgut ist der heilige Versammlungsort des Ordens. Versteckt hinter der altehrwürdigen Bibliothek von Silverglade, ist dieser Ort ein perfekter Rückzugsort für die Mitglieder der Demascus Knights. Die friedliche Atmosphäre und die abgeschiedene Lage bieten ideale Bedingungen für unsere Zusammenkünfte und Trainingseinheiten.</p>
+                        
+                        <div class="border-t border-[var(--dark-gold)] opacity-30 my-6"></div>
+                        
+                        <h4 class="cinzel text-xl text-[var(--pale-gold)] mb-3">So findest du uns:</h4>
+                        <p class="opacity-80">Deine Reise beginnt in den Hollow Woods, wo uralte Runen in die Bäume geschnitzt wurden. Diese mystischen Zeichen, für die meisten unsichtbar, weisen den Weg. Nur wer die Runen richtig zu deuten vermag und ihrem verschlungenen Pfad durch den Wald folgt, wird zur verborgenen Bibliothek von Silverglade geführt. Dort, hinter jahrhundertealten Mauern, offenbart sich der wahre Weg zum Landgut - aber nur jenen, die würdig sind, die geheimen Zeichen zu lesen. Die Runen erzählen von einem uralten Pakt zwischen den Knights und den Wächtern von Silverglade, der bis heute besteht.</p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer mt-20">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Demascus Knights</h3>
+                    <p class="opacity-70 mb-4">Der alte Orden, geweiht dem Schutz der menschlichen Welt vor den Schatten, die zwischen den Realitäten lauern.</p>
+                    <p class="footer-motto">"Vigilans in tenebris, lux in umbra"</p>
+                </div>
+                
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Schnellzugriff</h3>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="footer-link">Startseite</a></li>
+                        <li><a href="index.html#geschichte" class="footer-link">Unsere Geschichte</a></li>
+                        <li><a href="index.html#team" class="footer-link">Unser Team</a></li>
+                        <li><a href="outfit.html" class="footer-link">Outfit & Pferd</a></li>
+                        <li><a href="zeiten.html" class="footer-link">Treffen & Orte</a></li>
+                        <li><a href="beitreten.html" class="footer-link">Schließe Dich An</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="cinzel text-xl text-[var(--antique-gold)] mb-4">Kontakt</h3>
+                    <p class="opacity-70 mb-4">Für Auserwählte, die die Zeichen sehen können. Die Pforten des Ordens öffnen sich nur für jene, die würdig sind.</p>
+                    
+                    <div class="flex mt-6">
+                        <a href="#" class="social-icon">†</a>
+                        <a href="#" class="social-icon">ᛟ</a>
+                        <a href="#" class="social-icon">☽</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-divider"></div>
+            
+            <div class="footer-bottom text-center opacity-50">
+                <p class="mt-2">Erschaffen von <a href="https://papsn.de" class="text-[var(--antique-gold)] hover:text-[var(--pale-gold)]" target="_blank">Epsilon (papsn.de)</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize GSAP
+            gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.querySelectorAll('.mobile-menu .nav-link');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                this.classList.toggle('menu-open');
+                mobileMenu.classList.toggle('open');
+                
+                if(mobileMenu.classList.contains('open')) {
+                    navLinks.forEach((link, index) => {
+                        gsap.to(link, {
+                            opacity: 1,
+                            y: 0,
+                            delay: 0.1 * index,
+                            duration: 0.3
+                        });
+                    });
+                } else {
+                    navLinks.forEach(link => {
+                        gsap.to(link, {
+                            opacity: 0,
+                            y: 20,
+                            duration: 0.2
+                        });
+                    });
+                }
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                
+                if(window.scrollY > 50) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+            
+            // Add scroll animations
+            gsap.utils.toArray('.guardian-card').forEach(card => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

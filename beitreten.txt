@@ -1,0 +1,51 @@
+Anleitung für die Erstellung der "beitreten.html" Seite:
+
+1. Grundstruktur:
+   - Standard HTML5-Dokument mit den gleichen Grundelementen wie in outfit.html und zeiten.html
+   - Gleiche Navigation und Footer wie auf den anderen Seiten
+   - Header-Bereich mit dem Titel "Schließe Dich An" und einer kurzen Beschreibung
+
+2. Hauptinhalt - Zwei Hauptsektionen:
+   a) Voraussetzungen und Anforderungen:
+      - Eine Auflistung der Bedingungen für die Aufnahme in den Orden
+      - Text zu den Erwartungen an neue Mitglieder (Teilnahme an Treffen, Ausrüstung, etc.)
+      - Informationen über den Aufnahmeprozess und die Rangstruktur
+      - Eine visuelle Darstellung der beiden Pfade (Licht und Schatten)
+   
+   b) Bewerbungsformular:
+      - Ein umfassendes Formular mit folgenden Feldern:
+        * Persönliche Informationen:
+          - SSO Name (Spiel-Name)
+          - Discord Tag (oder andere Kontaktmöglichkeit)
+          - Spitzname
+          - Alter
+          - SSO Level
+        * Verfügbarkeit:
+          - Checkboxen für die verschiedenen Treffzeiten (Mittwoch, Samstag, Sonntag)
+        * Hintergrund:
+          - Zugehörigkeit zu anderen Gruppen/Teams/Clubs in SSO
+          - Ob man bereits jemanden aus den Demascus Knights kennt
+        * Motivation und Vorstellung:
+          - Warum möchtest du den Demascus Knights beitreten?
+          - Ein Feld für einen ausführlichen Vorstellungstext
+          - Auswahl zwischen Pfad des Lichts und Pfad des Schattens
+        * Abschließende Checkbox für das Einverständnis mit den Regeln
+      
+      - Absende-Button mit dem Text "Den Soulrider-Eid ablegen"
+      - Erfolgs- und Fehlermeldungen für das Formular
+      - Die gleiche Discord-Webhook-Integration wie auf der Hauptseite
+
+3. Styling:
+   - Einheitliches Design wie auf den anderen Seiten
+   - Hervorgehobene Bereiche für die beiden Pfade (Licht und Schatten)
+   - Responsive Gestaltung des Formulars
+   - Visuelle Elemente (Bilder oder Symbole) für jeden Pfad
+   - Animation beim Absenden des Formulars
+
+4. JavaScript-Funktionalität:
+   - Formularvalidierung
+   - Die Discord-Webhook-Integration
+   - Erfolgsanimation bei erfolgreicher Übermittlung
+   - Scrolling-Animationen für Elemente beim Laden der Seite
+
+Beim Erstellen der eigentlichen HTML-Datei könntest du die style.css einbinden und dieselbe Struktur wie bei den anderen HTML-Dateien verwenden, nur mit dem spezifischen Inhalt für das Bewerbungsformular. 
