@@ -82,14 +82,20 @@
                             <ul class="space-y-6">
                                 <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
                                     <h4 class="text-xl text-[var(--pale-gold)]">Ordens-Versammlung</h4>
-                                    <p class="opacity-80 mb-2">Jeden Dienstag, 19:00 Uhr</p>
+                                    <p class="opacity-80 mb-2">Jeder Mittwoch, 19:00 - 21:00 Uhr</p>
                                     <p class="italic opacity-60">Vollständige Anwesenheit aller Mitglieder erwünscht</p>
                                 </li>
                                 
                                 <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
-                                    <h4 class="text-xl text-[var(--pale-gold)]">Ordens-Versammlung</h4>
-                                    <p class="opacity-80 mb-2">Jeden Donnerstag, 19:00 Uhr</p>
-                                    <p class="italic opacity-60">Vollständige Anwesenheit aller Mitglieder erwünscht</p>
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Training der Soulrider</h4>
+                                    <p class="opacity-80 mb-2">Jeden Samstag, 16:00 - 18:00 Uhr</p>
+                                    <p class="italic opacity-60">Kampftraining und magische Studien</p>
+                                </li>
+                                
+                                <li class="border-l-2 border-[var(--dark-gold)] pl-6 py-2">
+                                    <h4 class="text-xl text-[var(--pale-gold)]">Pferde-Ausritt</h4>
+                                    <p class="opacity-80 mb-2">Jeden Sonntag, 14:00 - 16:00 Uhr</p>
+                                    <p class="italic opacity-60">Gemeinsames Ausreiten und Stärken der Pferdebindung</p>
                                 </li>
                             </ul>
                         </div>
@@ -132,7 +138,7 @@
                     <!-- Primary Location -->
                     <div class="guardian-card p-8 mb-12" data-aos="fade-up">
                         <h3 class="guardian-title text-2xl mb-6 text-center">Hauptquartier: Silverglade Landgut</h3>
-                        <div class="relative mb-8 overflow-hidden rounded-lg h-80">
+                        <div class="relative mb-8 overflow-hidden rounded-lg h-80 cursor-pointer" onclick="openImageModal('./IMG_7298.png')">
                             <img src="./IMG_7298.png" alt="Silverglade Landgut" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
                             <div class="absolute bottom-0 left-0 p-6">
@@ -140,6 +146,35 @@
                                 <p class="opacity-80">Silverglade, hinter der Bibliothek</p>
                             </div>
                         </div>
+
+                        <!-- Image Modal -->
+                        <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex items-center justify-center h-auto">
+                            <div class="relative p-5">
+                                <img id="modalImage" src="" alt="Vergrößertes Bild" class=" ">
+                                <button onclick="closeImageModal()" class="absolute top-5 right-7 text-white text-4xl hover:text-[var(--pale-gold)] transition-colors duration-300">&times;</button>
+                            </div>
+                        </div>
+
+                        <script>
+                            function openImageModal(imageSrc) {
+                                const modal = document.getElementById('imageModal');
+                                const modalImg = document.getElementById('modalImage');
+                                modal.classList.remove('hidden');
+                                modalImg.src = imageSrc;
+                            }
+
+                            function closeImageModal() {
+                                const modal = document.getElementById('imageModal');
+                                modal.classList.add('hidden');
+                            }
+
+                            // Close modal when clicking outside the image
+                            document.getElementById('imageModal').addEventListener('click', function(e) {
+                                if (e.target === this) {
+                                    closeImageModal();
+                                }
+                            });
+                        </script>
                         <p class="opacity-80 mb-6">Das Silverglade Landgut ist der heilige Versammlungsort des Ordens. Versteckt hinter der altehrwürdigen Bibliothek von Silverglade, ist dieser Ort ein perfekter Rückzugsort für die Mitglieder der Demascus Knights. Die friedliche Atmosphäre und die abgeschiedene Lage bieten ideale Bedingungen für unsere Zusammenkünfte und Trainingseinheiten.</p>
                         
                         <div class="border-t border-[var(--dark-gold)] opacity-30 my-6"></div>
