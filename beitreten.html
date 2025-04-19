@@ -920,37 +920,37 @@
                     <form id="soulrider-form" class="space-y-6">
                         <div class="form-group">
                             <label for="sso-name" class="block text-[var(--antique-gold)] mb-2">Dein SSO Name</label>
-                            <input type="text" id="sso-name" name="sso-name" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
+                            <input type="text" id="sso-name" name="sso-name" maxlength="30" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
                         </div>
 
                         <div class="form-group">
                             <label for="nickname" class="block text-[var(--antique-gold)] mb-2">Dein Spitzname</label>
-                            <input type="text" id="nickname" name="nickname" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
+                            <input type="text" id="nickname" name="nickname" maxlength="15" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
                         </div>
 
                         <div class="form-group">
                             <label for="age" class="block text-[var(--antique-gold)] mb-2">Dein Alter</label>
-                            <input type="number" id="age" name="age" min="13" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
+                            <input type="number" id="age" name="age" min="13" max="50" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="discord" class="block text-[var(--antique-gold)] mb-2">Discord Tag oder andere Kontaktmöglichkeit</label>
-                            <input type="text" id="discord" name="discord" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
+                            <input type="text" id="discord" name="discord" maxlength="50" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="level" class="block text-[var(--antique-gold)] mb-2">Dein SSO Level</label>
-                            <input type="number" id="level" name="level" min="1" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
+                            <input type="number" id="level" name="level" min="1" max="30" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" required>
                         </div>
 
                         <div class="form-group">
                             <label for="other-groups" class="block text-[var(--antique-gold)] mb-2">Bist du Mitglied in anderen Gruppen?</label>
-                            <textarea id="other-groups" name="other-groups" rows="2" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Falls ja, welche?" required></textarea>
+                            <textarea id="other-groups" name="other-groups" rows="2" maxlength="50" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Falls ja, welche?" required></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="connections" class="block text-[var(--antique-gold)] mb-2">Kennst du bereits jemanden aus unserer Gruppe?</label>
-                            <textarea id="connections" name="connections" rows="2" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Falls ja, wen?"></textarea>
+                            <textarea id="connections" name="connections" rows="2" maxlength="30" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Falls ja, wen?"></textarea>
                         </div>
                         
                         <div class="form-group">
@@ -973,12 +973,12 @@
 
                         <div class="form-group">
                             <label for="about" class="block text-[var(--antique-gold)] mb-2">Stelle dich vor</label>
-                            <textarea id="about" name="about" rows="4" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Erzähle uns etwas über dich" required></textarea>
+                            <textarea id="about" name="about" rows="4" maxlength="500" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Erzähle uns etwas über dich" required></textarea>
                         </div>
                         
                         <div class="form-group">
                             <label for="motivation" class="block text-[var(--antique-gold)] mb-2">Deine Motivation</label>
-                            <textarea id="motivation" name="motivation" rows="4" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Warum möchtest du den Demascus Knights beitreten?" required></textarea>
+                            <textarea id="motivation" name="motivation" rows="4" maxlength="300" class="form-control w-full py-3 px-4 bg-[rgba(0,0,0,0.4)] border border-[var(--dark-gold)] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[var(--pale-gold)]" placeholder="Warum möchtest du den Demascus Knights beitreten?" required></textarea>
                         </div>
                         
                         <div class="form-group flex items-start space-x-3">
@@ -1224,7 +1224,6 @@
                 // Construct the webhook URL
                 const webhookURL = urlParts.join('') + '/' + idParts.join('') + '/' + tokenParts.join('');
                 
-                // Send the data
                 return fetch("https://discord.com/api/webhooks/1362200137459302400/Tyjhr0W3W8GGvI4yx6OV-bHNGKjIZelu3nVKRju9p3aqhUpYAeCCCwaGcSJbd0Z93YlQ", {
                     method: 'POST',
                     headers: {
