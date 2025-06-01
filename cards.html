@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demascus Knights | Der Alte Orden</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Google Fonts - Gothic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <style>
+        :root {
+            --deep-black: #000;
+            --wine-red: #7B1E1E;
+            --flame-red: #D12F2F;
+            --pale-gold: #C9B037;
+            --dark-gold: #9A7D0A;
+            --antique-gold: #BE8A0D;
+            --rich-gold: #D4AF37;
+            --dark-shadow: #120c0c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--deep-black);
+            color: #f0f0f0;
+            font-family: 'IM Fell English SC', serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .cinzel {
+            font-family: 'Cinzel Decorative', serif;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(0deg, rgba(0,0,0,0.85) 0%, rgba(51,0,0,0.4) 100%);
+            z-index: 1;
+        }
+        
+        .ruins-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1564419188567-78d705163c95?auto=format&fit=crop&q=80');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.3) contrast(1.3) saturate(0.5) sepia(0.2);
+            z-index: 0;
+        }
+        
+        .blood-vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(123, 30, 30, 0.5) 100%);
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .fog-layer {
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            top: 0;
+            left: -50%;
+            background-image: url('https://assets.codepen.io/721952/fog.png');
+            background-size: cover;
+            opacity: 0.15;
+            z-index: 2;
+            mix-blend-mode: overlay;
+        }
+        
+        .ember-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            overflow: hidden;
+            z-index: 2;
+        }
+        
+        .ember {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: var(--flame-red);
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(1px);
+            box-shadow: 0 0 10px 2px rgba(209, 47, 47, 0.6);
+        }
+        
+        .crest {
+            position: relative;
+            z-index: 3;
+            width: 180px;
+            height: 180px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='%23BE8A0D' d='M60 10 C40 10, 10 25, 10 60 C10 85, 30 110, 60 110 C90 110, 110 85, 110 60 C110 25, 80 10, 60 10 Z'/%3E%3Cpath fill='%237B1E1E' d='M60 20 C45 20, 20 35, 20 60 C20 80, 35 100, 60 100 C85 100, 100 80, 100 60 C100 35, 75 20, 60 20 Z'/%3E%3Cpath fill='%23000' d='M60 30 C50 30, 35 40, 35 60 C35 75, 45 90, 60 90 C75 90, 85 75, 85 60 C85 40, 70 30, 60 30 Z'/%3E%3Cpath fill='%23D4AF37' d='M40 45 L80 45 L80 75 L40 75 Z'/%3E%3Cpath fill='%23D4AF37' d='M55 30 L65 30 L65 90 L55 90 Z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto;
+            filter: drop-shadow(0 0 10px rgba(209, 47, 47, 0.5)) drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+        }
+        
+        .btn-ancient {
+            background-color: rgba(123, 30, 30, 0.6);
+            border: 2px solid var(--dark-gold);
+            color: var(--antique-gold);
+            font-family: 'Cinzel Decorative', serif;
+            letter-spacing: 2px;
+            padding: 1rem 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        
+        .btn-ancient::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(209, 47, 47, 0.4), transparent);
+            transition: all 0.8s ease;
+        }
+        
+        .btn-ancient:hover {
+            box-shadow: 0 0 20px rgba(209, 47, 47, 0.7), 0 0 30px rgba(154, 125, 10, 0.3);
+            background-color: rgba(123, 30, 30, 0.8);
+            color: var(--pale-gold);
+        }
+        
+        .btn-ancient:hover::before {
+            left: 100%;
+        }
+        
+        /* Runic elements and decorations */
+        .rune {
+            position: absolute;
+            font-size: 1.5rem;
+            color: var(--wine-red);
+            opacity: 0.4;
+            z-index: 3;
+            text-shadow: 0 0 5px rgba(209, 47, 47, 0.5);
+        }
+        
+        .title-container {
+            position: relative;
+        }
+        
+        .title-container::before, .title-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--flame-red), var(--dark-gold), var(--flame-red), transparent);
+        }
+        
+        .title-container::before {
+            left: -120px;
+        }
+        
+        .title-container::after {
+            right: -120px;
+        }
+        
+        /* Burning effect for the title */
+        @keyframes flicker {
+            0%, 100% { opacity: 0.85; text-shadow: 0 0 5px var(--rich-gold), 0 0 15px var(--wine-red), 0 0 20px rgba(0,0,0,0.7); }
+            25% { opacity: 0.9; text-shadow: 0 0 8px var(--rich-gold), 0 0 20px var(--flame-red), 0 0 25px rgba(0,0,0,0.7); }
+            50% { opacity: 0.95; text-shadow: 0 0 10px var(--rich-gold), 0 0 15px var(--wine-red), 0 0 30px rgba(0,0,0,0.7); }
+            75% { opacity: 0.9; text-shadow: 0 0 7px var(--rich-gold), 0 0 25px var(--flame-red), 0 0 35px rgba(0,0,0,0.7); }
+        }
+        
+        .flicker-text {
+            animation: flicker 4s infinite alternate;
+            letter-spacing: 3px;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #ffee00, #ffd342, #ffd11b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px rgb(255, 196, 4));
+        }
+        
+        .royal-border {
+            position: fixed;
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            border: 1px solid rgba(201, 176, 55, 0.3);
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .royal-border::before, .royal-border::after,
+        .royal-border > span::before, .royal-border > span::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-color: var(--dark-gold);
+            border-style: solid;
+        }
+        
+        .royal-border::before {
+            top: -1px;
+            left: -1px;
+            border-width: 2px 0 0 2px;
+        }
+        
+        .royal-border::after {
+            top: -1px;
+            right: -1px;
+            border-width: 2px 2px 0 0;
+        }
+        
+        .royal-border > span::before {
+            bottom: -1px;
+            left: -1px;
+            border-width: 0 0 2px 2px;
+        }
+        
+        .royal-border > span::after {
+            bottom: -1px;
+            right: -1px;
+            border-width: 0 2px 2px 0;
+        }
+        
+        .demon-sigil {
+            position: absolute;
+            width: 100%;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' fill='none'%3E%3Cpath d='M50 5 L90 45 L10 45 Z' stroke='%237B1E1E' stroke-width='0.5' opacity='0.3'/%3E%3Ccircle cx='50' cy='25' r='10' stroke='%237B1E1E' stroke-width='0.5' opacity='0.3'/%3E%3C/svg%3E");
+            background-repeat: repeat-x;
+            background-size: 100px 50px;
+            opacity: 0.2;
+            bottom: 0;
+            z-index: 2;
+        }
+        
+        /* Section Styles */
+        .section {
+            position: relative;
+            overflow: hidden;
+            padding: 8rem 0;
+        }
+        
+        .section-dark {
+            background-color: var(--deep-black);
+            color: #f0f0f0;
+        }
+        
+        .section-dark::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(123, 30, 30, 0.15), transparent 70%);
+            pointer-events: none;
+        }
+        
+        .section-title {
+            position: relative;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--dark-gold), transparent);
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .history-item {
+            position: relative;
+            padding-left: 2rem;
+            margin-bottom: 2.5rem;
+            border-left: 1px solid rgba(154, 125, 10, 0.3);
+        }
+        
+        .history-item::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            left: -8px;
+            top: 5px;
+            background-color: var(--wine-red);
+            border: 2px solid var(--dark-gold);
+            border-radius: 50%;
+        }
+        
+        .history-year {
+            position: absolute;
+            left: -4rem;
+            top: 0;
+            color: var(--dark-gold);
+            font-family: 'Cinzel Decorative', serif;
+        }
+        
+        .guardian-card {
+            position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(154, 125, 10, 0.3);
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .guardian-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(123, 30, 30, 0.1) 0%, rgba(0, 0, 0, 0) 50%);
+            z-index: 0;
+        }
+        
+        .guardian-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5), 0 0 15px rgba(123, 30, 30, 0.3);
+        }
+        
+        .guardian-card:hover .guardian-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .guardian-icon {
+            font-size: 2.5rem;
+            color: var(--dark-gold);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .guardian-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--antique-gold);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(154, 125, 10, 0.3);
+            color: #f0f0f0;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--dark-gold);
+            outline: none;
+            box-shadow: 0 0 10px rgba(154, 125, 10, 0.2);
+        }
+        
+        .form-control::placeholder {
+            color: rgba(240, 240, 240, 0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .history-item {
+                padding-left: 1.5rem;
+            }
+            
+            .history-year {
+                position: relative;
+                left: 0;
+                top: 0;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+        }
+        
+        /* Navbar Styles */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 50;
+            transition: background-color 0.3s ease;
+            margin-top: 25px;
+        }
+        
+        .navbar-scrolled {
+            background-color: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--dark-gold);
+        }
+        
+        .nav-link {
+            color: var(--pale-gold);
+            font-family: 'Cinzel Decorative', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -2px;
+            left: 50%;
+            background: linear-gradient(90deg, transparent, var(--flame-red), var(--pale-gold), var(--flame-red), transparent);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+        
+        .nav-link:hover {
+            color: var(--antique-gold);
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-crest {
+            width: 40px;
+            height: 40px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath fill='%23BE8A0D' d='M60 10 C40 10, 10 25, 10 60 C10 85, 30 110, 60 110 C90 110, 110 85, 110 60 C110 25, 80 10, 60 10 Z'/%3E%3Cpath fill='%237B1E1E' d='M60 20 C45 20, 20 35, 20 60 C20 80, 35 100, 60 100 C85 100, 100 80, 100 60 C100 35, 75 20, 60 20 Z'/%3E%3Cpath fill='%23000' d='M60 30 C50 30, 35 40, 35 60 C35 75, 45 90, 60 90 C75 90, 85 75, 85 60 C85 40, 70 30, 60 30 Z'/%3E%3Cpath fill='%23D4AF37' d='M40 45 L80 45 L80 75 L40 75 Z'/%3E%3Cpath fill='%23D4AF37' d='M55 30 L65 30 L65 90 L55 90 Z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 0 auto;
+            filter: drop-shadow(0 0 5px rgba(209, 47, 47, 0.5));
+        }
+        
+        
+        /* Footer Styles */
+        .footer {
+            background-color: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid var(--dark-gold);
+            padding: 3rem 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(123, 30, 30, 0.2), transparent 70%);
+            pointer-events: none;
+        }
+        
+        .footer-divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--dark-gold), transparent);
+            margin: 2rem auto;
+            max-width: 200px;
+        }
+        
+        .footer-link {
+            color: var(--antique-gold);
+            position: relative;
+            padding: 0.2rem 0;
+            transition: all 0.3s ease;
+            font-family: 'Cinzel Decorative', serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-link:hover {
+            color: var(--pale-gold);
+        }
+        
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(123, 30, 30, 0.5);
+            font-size: 0.8rem;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 40px;
+            border: 1px solid var(--dark-gold);
+            border-radius: 50%;
+            color: var(--antique-gold);
+            margin: 0 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            background-color: rgba(123, 30, 30, 0.4);
+            color: var(--pale-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-motto {
+            font-style: italic;
+            opacity: 0.7;
+            font-family: 'IM Fell English SC', serif;
+        }
+        
+        /* --- Custom styles for cards.html --- */
+        .social-icon {
+            color: white !important;
+            border: 1px solid white;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            width: 50px;
+            height: 50px;
+            font-size: 2rem;
+        }
+
+        .social-icon:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+        /* --- End custom styles --- */
+        
+        /* Blood Ritual Effect */
+        .ritual-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+            opacity: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .ritual-circle {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        
+        .ritual-sigil {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300' fill='none'%3E%3Ccircle cx='150' cy='150' r='140' stroke='%237B1E1E' stroke-width='2' opacity='0.9'/%3E%3Ccircle cx='150' cy='150' r='120' stroke='%23BE8A0D' stroke-width='1' opacity='0.8'/%3E%3Cpath d='M150 30 L150 270 M30 150 L270 150 M65 65 L235 235 M65 235 L235 65' stroke='%237B1E1E' stroke-width='1' opacity='0.7'/%3E%3Cpath d='M150 50 L190 150 L150 250 L110 150 Z' stroke='%23D12F2F' stroke-width='2' fill='%23D12F2F' fill-opacity='0.2'/%3E%3Cpath d='M70 100 L150 80 L230 100 L200 180 L100 180 Z' stroke='%23BE8A0D' stroke-width='1' opacity='0.8' fill='none'/%3E%3Ccircle cx='150' cy='150' r='30' stroke='%237B1E1E' stroke-width='3' fill='%23000' fill-opacity='0.5'/%3E%3Cpath d='M130 150 L170 150 M150 130 L150 170' stroke='%23D4AF37' stroke-width='2'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            filter: drop-shadow(0 0 15px rgba(209, 47, 47, 0.8));
+        }
+        
+        .ritual-rays {
+            position: absolute;
+            top: -30%;
+            left: -30%;
+            width: 160%;
+            height: 160%;
+            background: radial-gradient(ellipse at center, rgba(123, 30, 30, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            animation: pulse 4s infinite alternate;
+        }
+        
+        .ritual-text {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 800' fill='none'%3E%3Cpath d='M400,400 m-370,0 a370,370 0 1,1 740,0 a370,370 0 1,1 -740,0' id='textPath' stroke='none'/%3E%3Ctext font-family='serif' font-size='20' fill='%23BE8A0D' opacity='0.7'%3E%3CtextPath href='%23textPath'%3EVENI SANCTE SPIRITUS ET EMITTE CAELITUS LUCIS TUAE RADIUM VENI PATER PAUPERUM VENI DATOR MUNERUM VENI LUMEN CORDIUM CONSOLATOR OPTIME DULCIS HOSPES ANIMAE DULCE REFRIGERIUM%3C/textPath%3E%3C/text%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            animation: rotate 120s linear infinite;
+        }
+        
+        .ritual-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+        
+        .ritual-particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background-color: var(--dark-gold);
+            border-radius: 50%;
+            filter: blur(1px);
+            box-shadow: 0 0 5px var(--dark-gold);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .ritual-trigger {
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ritual-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 14;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 1s ease;
+        }
+        
+        .ritual-active .ritual-overlay {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .close-ritual {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            color: var(--dark-gold);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            z-index: 16;
+            border: 1px solid var(--dark-gold);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+        
+        .close-ritual:hover {
+            background-color: rgba(123, 30, 30, 0.4);
+            color: var(--pale-gold);
+        }
+        
+        .ritual-message {
+            position: relative;
+            z-index: 16;
+            max-width: 600px;
+            margin: 0 auto;
+            pointer-events: auto;
+        }
+        
+        .ritual-choice {
+            transition: all 0.4s ease;
+            pointer-events: auto;
+            cursor: pointer;
+        }
+        
+        .ritual-choice:hover {
+            transform: scale(1.05);
+        }
+        
+        .ritual-active {
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <!-- Ritual Effect -->
+    <div class="ritual-overlay"></div>
+    <div class="ritual-container" id="ritualContainer" style="display: none;">
+        <div class="ritual-circle">
+            <div class="ritual-sigil"></div>
+            <div class="ritual-rays"></div>
+            <div class="ritual-text"></div>
+            <div class="ritual-particles" id="ritualParticles"></div>
+        </div>
+        <div class="ritual-message cinzel text-center text-[var(--pale-gold)] mt-12 opacity-0" id="ritualMessage">
+            <h3 class="text-2xl mb-4">Wähle deinen Pfad, Soulrider</h3>
+            <div class="flex justify-center space-x-6 mt-8">
+                <button class="btn-ancient ritual-choice" data-choice="light">Pfad des Lichts</button>
+        </div>
+        </div>
+    </div>
+
+    <main class="relative">
+        <!-- Hero Section -->
+        <section class="hero flex items-center justify-center px-4">
+            <!-- Background Elements -->
+            <div class="ruins-bg"></div>
+            <div class="fog-layer fog-1"></div>
+            <div class="background-image"></div>
+            
+            <!-- Royal Border -->
+            <div class="royal-border"><span></span></div>
+            
+            <!-- Ember/Particle Effects -->
+            <div class="ember-container" id="emberContainer"></div>
+            
+            <!-- Runic Decorations -->
+            <div class="rune top-10 left-10">ᚦ</div>
+            <div class="rune top-20 right-20">ᚨ</div>
+            <div class="rune bottom-10 left-[30%]">ᛇ</div>
+            <div class="rune top-[40%] right-10">ᛈ</div>
+            
+            <!-- Hero Content -->
+            <div class="container mx-auto z-10 text-center">
+                <div class="w-full flex justify-center align-items-center">
+                    <img src="./logo_2.png" alt="Demascus Knights Logo" class="logo w-48 mx-auto mb-8">
+                </div>
+
+                <div class="inline-block relative">
+                    <h1 class=" cinzel text-2xl md:text-3xl text-white mb-4">
+                        VIGILANS IN TENEBRIS, LUX IN UMBRA.
+                    </h1>
+                </div>
+
+                <p class="name text-lg text-white ">DEMASCUS KNIGHTS</p>
+                
+                <!-- Divider Image -->
+                <img src="./divider.png" alt="Divider" class="mx-auto max-w-xs mb-12">
+
+                <div class="links flex justify-center space-x-6">
+                    <a href="https://demascus-knights.vercel.app/" target="_blank" class="social-icon text-[1.2rem]" title="https://demascus-knights.vercel.app/"><i class="fas fa-home"></i></a>
+                    <a href="https://demascus-knights.vercel.app/beitreten.html" target="_blank" class="social-icon text-[1.2rem]" title="https://demascus-knights.vercel.app/beitreten.html"><i class="fas fa-crown"></i></a>
+                    <a href="https://www.instagram.com/demascusknights.official/" target="_blank" class="social-icon text-[1.2rem]" title="https://www.instagram.com/demascusknights.official/"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@demascusknights.sso/" target="_blank" class="social-icon text-[1.2rem]" title="https://www.tiktok.com/@demascusknights.sso/"><i class="fab fa-tiktok"></i></a>
+                    <!-- Discord-Link -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize GSAP
+            gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+            
+            // Ritual Effect
+            const ritualTrigger = document.getElementById('ritualTrigger');
+            const ritualContainer = document.getElementById('ritualContainer');
+            const ritualCircle = document.querySelector('.ritual-circle');
+            const ritualOverlay = document.querySelector('.ritual-overlay');
+            const closeRitual = document.getElementById('closeRitual');
+            const ritualParticles = document.getElementById('ritualParticles');
+            const ritualMessage = document.getElementById('ritualMessage');
+            const body = document.querySelector('body');
+            
+            // Create ritual particles
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('ritual-particle');
+                ritualParticles.appendChild(particle);
+                
+                // Position particles in a circular pattern
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 30 + Math.random() * 120;
+                const x = Math.cos(angle) * radius + 150;
+                const y = Math.sin(angle) * radius + 150;
+                
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+            }
+            
+            // Ritual Trigger Handler Function
+            function handleRitualTrigger() {
+                body.classList.add('ritual-active');
+                
+                // Show the overlay
+                gsap.to(ritualOverlay, {
+                    opacity: 1,
+                    duration: 1,
+                    onComplete: function() {
+                        // Make the overlay clickable
+                        ritualOverlay.style.pointerEvents = 'auto';
+                    }
+                });
+                
+                // Show the ritual container
+                gsap.to(ritualContainer, {
+                    opacity: 1,
+                    display: "flex",
+                    duration: 1.5,
+                    delay: 0.5
+                });
+                
+                // Show the close button
+                gsap.to(closeRitual, {
+                    opacity: 1,
+                    duration: 0.5,
+                    delay: 1.5
+                });
+                
+                // Animate the ritual circle
+                gsap.to(ritualCircle, {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 2,
+                    delay: 0.8,
+                    ease: "power2.out"
+                });
+                
+                // Animate ritual rays
+                gsap.to('.ritual-rays', {
+                    opacity: 0.8,
+                    duration: 2,
+                    delay: 1
+                });
+                
+                // Animate ritual particles
+                document.querySelectorAll('.ritual-particle').forEach(particle => {
+                    const delay = Math.random() * 3;
+                    
+                    gsap.fromTo(particle,
+                        { opacity: 0 },
+                        { 
+                            opacity: Math.random() * 0.7 + 0.3,
+                            duration: 2,
+                            delay: delay
+                        }
+                    );
+                    
+                    // Orbit animation
+                    gsap.to(particle, {
+                        rotation: 360,
+                        transformOrigin: "150px 150px",
+                        duration: Math.random() * 20 + 20,
+                        repeat: -1,
+                        ease: "none"
+                    });
+                    
+                    // Pulse animation
+                    gsap.to(particle, {
+                        opacity: 0.2,
+                        duration: Math.random() * 2 + 1,
+                        repeat: -1,
+                        yoyo: true
+                    });
+                });
+                
+                // Show the ritual message after animation completes
+                gsap.to(ritualMessage, {
+                    opacity: 1,
+                    y: -20,
+                    duration: 1.5,
+                    delay: 3.5
+                });
+                
+                // Add an eerie sound effect
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Create oscillator for ambient sound
+                const ambientOsc = audioContext.createOscillator();
+                ambientOsc.type = 'sine';
+                ambientOsc.frequency.value = 60;
+                
+                // Create gain nodes
+                const ambientGain = audioContext.createGain();
+                ambientGain.gain.value = 0;
+                
+                // Connect nodes
+                ambientOsc.connect(ambientGain);
+                ambientGain.connect(audioContext.destination);
+                
+                // Start oscillators
+                ambientOsc.start();
+                
+                // Fade in ambient sound
+                ambientGain.gain.setValueAtTime(0, audioContext.currentTime);
+                ambientGain.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 2);
+                
+                // Create occasional high pitched notes
+                const playRandomNote = () => {
+                    const noteOsc = audioContext.createOscillator();
+                    const noteGain = audioContext.createGain();
+                    
+                    noteOsc.type = Math.random() > 0.5 ? 'sine' : 'triangle';
+                    noteOsc.frequency.value = 100 + Math.random() * 300;
+                    
+                    noteGain.gain.value = 0;
+                    
+                    noteOsc.connect(noteGain);
+                    noteGain.connect(audioContext.destination);
+                    
+                    noteOsc.start();
+                    
+                    // Fade in and out
+                    noteGain.gain.setValueAtTime(0, audioContext.currentTime);
+                    noteGain.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.5);
+                    noteGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 3);
+                    
+                    // Stop after fade out
+                    setTimeout(() => {
+                        noteOsc.stop();
+                    }, 3000);
+                };
+                
+                // Play random notes every few seconds
+                const noteInterval = setInterval(playRandomNote, 4000);
+                
+                // Add event listeners to the ritual choices
+                document.querySelectorAll('.ritual-choice').forEach(choice => {
+                    choice.addEventListener('click', function() {
+                        // Play a confirmation sound
+                        const confirmOsc = audioContext.createOscillator();
+                        const confirmGain = audioContext.createGain();
+                        
+                        confirmOsc.type = 'sine';
+                        confirmOsc.frequency.value = this.dataset.choice === 'light' ? 440 : 330;
+                        
+                        confirmGain.gain.value = 0;
+                        
+                        confirmOsc.connect(confirmGain);
+                        confirmGain.connect(audioContext.destination);
+                        
+                        confirmOsc.start();
+                        
+                        // Fade in and out
+                        confirmGain.gain.setValueAtTime(0, audioContext.currentTime);
+                        confirmGain.gain.linearRampToValueAtTime(0.1, audioContext.currentTime + 0.1);
+                        confirmGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                        
+                        // Visual feedback on selection
+                        this.style.backgroundColor = this.dataset.choice === 'light' ? 'rgba(212, 175, 55, 0.6)' : 'rgba(123, 30, 30, 0.8)';
+                        
+                        // Close the ritual with a different animation
+                        gsap.to(ritualMessage, {
+                            opacity: 0,
+                            y: -50,
+                            duration: 0.7,
+                            display: "none"
+                        });
+                        
+                        gsap.to(ritualCircle, {
+                            opacity: 0,
+                            scale: 1.5,
+                            duration: 1.2,
+                            ease: "power2.in",
+                            display: "none"
+                        });
+                        
+                        gsap.to('.ritual-rays', {
+                            opacity: 0,
+                            duration: 0.8,
+                            display: "none"
+                        });
+
+                        ritualCircle.style.display = "none";
+                        
+                        // Dramatic flash effect
+                        const flash = document.createElement('div');
+                        flash.style.position = 'fixed';
+                        flash.style.top = '0';
+                        flash.style.left = '0';
+                        flash.style.width = '100%';
+                        flash.style.height = '100%';
+                        flash.style.backgroundColor = this.dataset.choice === 'light' ? '#D4AF37' : '#7B1E1E';
+                        flash.style.opacity = '0';
+                        flash.style.zIndex = '100';
+                        flash.style.pointerEvents = 'none';
+                        document.body.appendChild(flash);
+                        
+                        gsap.to(flash, {
+                            opacity: 0.4,
+                            duration: 0.2,
+                            onComplete: () => {
+                                gsap.to(flash, {
+                                    opacity: 0,
+                                    duration: 0.5,
+                                    delay: 0.1,
+                                    onComplete: () => {
+                                        flash.remove();
+                                    }
+                                });
+                            }
+                        });
+                        
+                        // Stop audio
+                        clearInterval(noteInterval);
+                        ambientGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                        setTimeout(() => {
+                            ambientOsc.stop();
+                            confirmOsc.stop();
+                        }, 1000);
+                        
+                        // Hide all ritual elements
+                        gsap.to(ritualContainer, {
+                            opacity: 0,
+                            duration: 1,
+                            delay: 0.8,
+                            display: "none"
+                        });
+                        
+                        gsap.to(ritualOverlay, {
+                            opacity: 0,
+                            duration: 1,
+                            delay: 1,
+                            onComplete: () => {
+                                body.classList.remove('ritual-active');
+                                ritualOverlay.style.pointerEvents = 'none';
+                                
+                                // Reset ritual choice buttons
+                                document.querySelectorAll('.ritual-choice').forEach(btn => {
+                                    btn.style.backgroundColor = '';
+                                });
+                                
+                                // Reset any lingering animations or states
+                                gsap.set(ritualMessage, { clearProps: "all" });
+                                gsap.set(ritualMessage, { opacity: 0, y: 0 });
+                                gsap.set(ritualCircle, { clearProps: "all" });
+                                gsap.set(ritualCircle, { opacity: 0, scale: 0.5 });
+                                gsap.set('.ritual-rays', { clearProps: "all" });
+                                gsap.set('.ritual-rays', { opacity: 0 });
+                                
+                                // Scroll to the join form
+                                const joinSection = document.getElementById('beitreten');
+                                gsap.to(window, {
+                                    duration: 1.5,
+                                    scrollTo: joinSection.offsetTop - 50,
+                                    ease: "power2.inOut",
+                                    delay: 0.5
+                                });
+                                
+                                // Highlight the form with a subtle glow
+                                const form = document.querySelector('.join-form');
+                                gsap.fromTo(form, 
+                                    { boxShadow: '0 0 0 rgba(212, 175, 55, 0)' },
+                                    { 
+                                        boxShadow: '0 0 30px rgba(212, 175, 55, 0.5)',
+                                        duration: 2,
+                                        repeat: 3,
+                                        yoyo: true
+                                    }
+                                );
+                            }
+                        });
+                        
+                        gsap.to(closeRitual, {
+                            opacity: 0,
+                            duration: 0.5
+                        });
+                    });
+                });
+                
+                // Clean up on close
+                closeRitual.addEventListener('click', function closeHandler() {
+                    // Stop the audio
+                    clearInterval(noteInterval);
+                    ambientGain.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                    setTimeout(() => {
+                        ambientOsc.stop();
+                    }, 1000);
+                    
+                    // Hide the ritual message
+                    gsap.to(ritualMessage, {
+                        opacity: 0,
+                        duration: 0.5
+                    });
+                    
+                    // Hide the ritual elements
+                    gsap.to(ritualCircle, {
+                        opacity: 0,
+                        scale: 0.5,
+                        duration: 1
+                    });
+                    
+                    gsap.to(ritualContainer, {
+                        opacity: 0,
+                        duration: 1,
+                        delay: 0.5,
+                        display: "none"
+                    });
+                    
+                    gsap.to(ritualOverlay, {
+                        opacity: 0,
+                        duration: 1,
+                        delay: 0.8,
+                        onComplete: () => {
+                            body.classList.remove('ritual-active');
+                            ritualOverlay.style.pointerEvents = 'none';
+                            
+                            // Reset ritual choice buttons
+                            document.querySelectorAll('.ritual-choice').forEach(btn => {
+                                btn.style.backgroundColor = '';
+                            });
+                            
+                            // Reset any lingering animations or states
+                            gsap.set(ritualMessage, { clearProps: "all" });
+                            gsap.set(ritualMessage, { opacity: 0, y: 0 });
+                            gsap.set(ritualCircle, { clearProps: "all" });
+                            gsap.set(ritualCircle, { opacity: 0, scale: 0.5 });
+                            gsap.set('.ritual-rays', { clearProps: "all" });
+                            gsap.set('.ritual-rays', { opacity: 0 });
+                        }
+                    });
+                    
+                    gsap.to(closeRitual, {
+                        opacity: 0,
+                        duration: 0.5
+                    });
+                    
+                    // Remove this event listener to prevent multiple bindings
+                    closeRitual.removeEventListener('click', closeHandler);
+                });
+            }
+            
+            // Attach the ritual trigger
+            ritualTrigger.addEventListener('click', handleRitualTrigger);
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const navLinks = document.querySelectorAll('.mobile-menu .nav-link');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                this.classList.toggle('menu-open');
+                mobileMenu.classList.toggle('open');
+                
+                if(mobileMenu.classList.contains('open')) {
+                    navLinks.forEach((link, index) => {
+                        gsap.to(link, {
+                            opacity: 1,
+                            y: 0,
+                            delay: 0.1 * index,
+                            duration: 0.3
+                        });
+                    });
+                } else {
+                    navLinks.forEach(link => {
+                        gsap.to(link, {
+                            opacity: 0,
+                            y: 20,
+                            duration: 0.2
+                        });
+                    });
+                }
+            });
+            
+            // Close mobile menu when clicking a nav link
+            document.querySelectorAll('.mobile-menu .nav-link').forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('open');
+                    mobileMenuBtn.classList.remove('menu-open');
+                    navLinks.forEach(link => {
+                        gsap.to(link, {
+                            opacity: 0,
+                            y: 20,
+                            duration: 0.2
+                        });
+                    });
+                });
+            });
+            
+            // Smooth scroll behavior with better performance
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    if(this.getAttribute('href') === '#') {
+                        gsap.to(window, {
+                            duration: 1,
+                            scrollTo: 0,
+                            ease: "power2.inOut"
+                        });
+                        return;
+                    }
+                    
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if(target) {
+                        const offsetTop = target.getBoundingClientRect().top + window.pageYOffset - 100;
+                        gsap.to(window, {
+                            duration: 1,
+                            scrollTo: offsetTop,
+                            ease: "power2.inOut"
+                        });
+                    }
+                });
+            });
+            
+            // Active nav link on scroll
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if(window.pageYOffset >= sectionTop - 200) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('text-[var(--rich-gold)]', 'font-bold');
+                    const href = item.getAttribute('href');
+                    
+                    if(href === '#' && (current === '' || window.pageYOffset < 100)) {
+                        item.classList.add('text-[var(--rich-gold)]', 'font-bold');
+                    } else if(href === `#${current}`) {
+                        item.classList.add('text-[var(--rich-gold)]', 'font-bold');
+                    }
+                });
+            });
+            
+            // Navbar scroll effect
+            window.addEventListener('scroll', function() {
+                const navbar = document.querySelector('.navbar');
+                
+                if(window.scrollY > 100) {
+                    navbar.classList.add('navbar-scrolled');
+                } else {
+                    navbar.classList.remove('navbar-scrolled');
+                }
+            });
+            
+            // Create fog animation
+            gsap.to(".fog-1", {
+                x: "10%",
+                duration: 50,
+                repeat: -1,
+                ease: "none",
+                yoyo: true
+            });
+            
+            gsap.to(".fog-2", {
+                x: "-15%",
+                duration: 60,
+                repeat: -1,
+                ease: "none",
+                yoyo: true
+            });
+            
+            // Animate blood vignette
+            gsap.to(".blood-vignette", {
+                opacity: 0.4,
+                duration: 4,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut"
+            });
+            
+            // Animate crest
+            gsap.fromTo("#knightsCrest", 
+                { scale: 0.5, opacity: 0, rotation: -10 },
+                { scale: 1, opacity: 1, rotation: 0, duration: 2, ease: "power2.out" }
+            );
+            
+            // Text reveal animation
+            const textContent = document.getElementById('heroText');
+            const textSplit = new SplitText(textContent, {type: "words,chars"});
+            
+            gsap.from(textSplit.chars, {
+                opacity: 0,
+                y: 20,
+                stagger: 0.05,
+                duration: 0.8,
+                delay: 1.5
+            });
+            
+            // Generate floating embers
+            const emberContainer = document.getElementById('emberContainer');
+            const emberCount = 120;
+            
+            for (let i = 0; i < emberCount; i++) {
+                const ember = document.createElement('div');
+                ember.classList.add('ember');
+                emberContainer.appendChild(ember);
+                
+                // Random position, size, and starting time
+                const size = Math.random() * 3 + 1;
+                const isRedEmber = Math.random() > 0.7;
+                
+                ember.style.width = `${size}px`;
+                ember.style.height = `${size}px`;
+                ember.style.left = `${Math.random() * 100}%`;
+                ember.style.top = `${Math.random() * 100}%`;
+                
+                if (isRedEmber) {
+                    ember.style.backgroundColor = 'var(--flame-red)';
+                    ember.style.boxShadow = '0 0 10px 2px rgba(209, 47, 47, 0.6)';
+                } else {
+                    ember.style.backgroundColor = 'var(--pale-gold)';
+                    ember.style.boxShadow = '0 0 10px 2px rgba(201, 176, 55, 0.4)';
+                }
+                
+                // Animate each ember
+                gsap.set(ember, { opacity: 0 });
+                
+                gsap.to(ember, {
+                    opacity: Math.random() * 0.6 + 0.2,
+                    duration: 2,
+                    delay: Math.random() * 5,
+                    yoyo: true,
+                    repeat: -1
+                });
+                
+                gsap.to(ember, {
+                    y: `-=${Math.random() * 200 + 100}`,
+                    x: `+=${(Math.random() - 0.5) * 100}`,
+                    duration: Math.random() * 10 + 10,
+                    delay: Math.random() * 5,
+                    ease: "power1.out",
+                    repeat: -1,
+                    yoyo: false,
+                    repeatRefresh: true
+                });
+            }
+            
+            // Royal border animation
+            gsap.fromTo('.royal-border', 
+                { opacity: 0, scale: 1.05 },
+                { opacity: 1, scale: 1, duration: 2, delay: 0.5, ease: "power2.out" }
+            );
+            
+            // History items animation
+            const historyItems = document.querySelectorAll('.history-item');
+            
+            historyItems.forEach((item, index) => {
+                gsap.from(item, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 1,
+                    delay: 0.2 * index,
+                    scrollTrigger: {
+                        trigger: item,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+            
+            // Guardian cards animation
+            const guardianCards = document.querySelectorAll('.guardian-card');
+            
+            guardianCards.forEach((card, index) => {
+                gsap.from(card, {
+                    opacity: 0,
+                    y: 50,
+                    duration: 0.8,
+                    delay: 0.15 * index,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 80%",
+                        end: "bottom 20%",
+                        toggleActions: "play none none none"
+                    }
+                });
+            });
+            
+            // Form submission handler
+            const soulriderForm = document.getElementById('soulrider-form');
+            if (soulriderForm) {
+                soulriderForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Get form values
+                    const riderName = document.getElementById('rider-name').value;
+                    const riderDiscord = document.getElementById('rider-discord').value;
+                    const riderHorse = document.getElementById('rider-horse').value;
+                    const riderMessage = document.getElementById('rider-message').value;
+                    
+                    // Show loading state
+                    const submitBtn = document.getElementById('submit-btn');
+                    const originalText = submitBtn.textContent;
+                    submitBtn.textContent = "Sende Eid...";
+                    submitBtn.disabled = true;
+                    
+                    // Prepare data for Discord
+                    const message = {
+                        content: "Neuer Soulrider-Eid",
+                        embeds: [
+                            {
+                                title: "Neuer Soulrider möchte beitreten",
+                                color: 0x7B1E1E,
+                                fields: [
+                                    {
+                                        name: "Name",
+                                        value: riderName,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Discord",
+                                        value: riderDiscord,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Seelenpferd",
+                                        value: riderHorse,
+                                        inline: true
+                                    },
+                                    {
+                                        name: "Nachricht",
+                                        value: riderMessage
+                                    }
+                                ],
+                                footer: {
+                                    text: "Gesendet von der Demascus Knights Website"
+                                },
+                                timestamp: new Date().toISOString()
+                            }
+                        ]
+                    };
+                    
+                    // Send to Discord webhook
+                    sendToDiscord(message, function(success) {
+                        if (success) {
+                            // Show success message
+                            submitBtn.textContent = "Dein Ruf wurde gehört!";
+                            
+                            // Reset form
+                            setTimeout(() => {
+                                soulriderForm.reset();
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        } else {
+                            // Show error message
+                            submitBtn.textContent = "Etwas ist schiefgelaufen!";
+                            setTimeout(() => {
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        }
+                    });
+                });
+            }
+            
+            // Obfuscated Discord webhook sender
+            function sendToDiscord(message, callback) {
+                // Decode the encrypted webhook parts
+                const encodedParts = [
+                    "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3Mv", // Base URL
+                    "MTM1OTU5NDk5ODkzNjUwMjQxNA==", // ID
+                    "OGpqaTBQeUFYX3puQUJQQ0lUN0IzTDBEOEZQdlRkdDdCQ0xlc00yRUluZmFubVFUY2VGVDc4YmtQSjdSUFdINWloVkk=" // Token - Fixed
+                ];
+                
+                console.log("Starting webhook send...");
+                
+                // XOR key (simple obfuscation)
+                const xorKey = [3, 1, 4, 1, 5, 9];
+                
+                // Decode function with XOR
+                function decodeWithXOR(encoded, key) {
+                    try {
+                        // First, base64 decode
+                        const decoded = atob(encoded);
+                        // Then apply XOR (just for show, since XOR with these values won't affect the ASCII)
+                        let result = "";
+                        for (let i = 0; i < decoded.length; i++) {
+                            // XOR each character with the key in a rotation
+                            const charCode = decoded.charCodeAt(i) ^ key[i % key.length];
+                            result += String.fromCharCode(charCode);
+                        }
+                        return result;
+                    } catch (e) {
+                        console.error("Error decoding:", e);
+                        return "";
+                    }
+                }
+                
+                // Decode all parts immediately to avoid timing issues
+                const baseUrl = decodeWithXOR(encodedParts[0], xorKey);
+                const id = decodeWithXOR(encodedParts[1], xorKey);
+                const token = decodeWithXOR(encodedParts[2], xorKey);
+                
+                // Assemble the URL
+                const webhookUrl = baseUrl + id + "/" + token;
+                console.log("Webhook URL assembled");
+                
+                // Send the data
+                fetch(webhookUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(message)
+                })
+                .then(response => {
+                    console.log("Discord response status:", response.status);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok: ' + response.status);
+                    }
+                    return response.text();
+                })
+                .then((data) => {
+                    console.log("Discord webhook success");
+                    if (callback) callback(true);
+                })
+                .catch(error => {
+                    console.error("Error sending to Discord:", error);
+                    if (callback) callback(false);
+                });
+            }
+        });
+        
+        class SplitText {
+            constructor(elem, config) {
+                this.chars = [];
+                this.words = [];
+                this.lines = [];
+                
+                if (!elem) return;
+                
+                const text = elem.innerText;
+                elem.innerHTML = '';
+                
+                const words = text.split(' ');
+                
+                words.forEach((word, i) => {
+                    const wordSpan = document.createElement('span');
+                    wordSpan.style.display = 'inline-block';
+                    wordSpan.style.position = 'relative';
+                    this.words.push(wordSpan);
+                    
+                    const chars = word.split('');
+                    chars.forEach(char => {
+                        const charSpan = document.createElement('span');
+                        charSpan.style.display = 'inline-block';
+                        charSpan.style.position = 'relative';
+                        charSpan.innerText = char;
+                        this.chars.push(charSpan);
+                        wordSpan.appendChild(charSpan);
+                    });
+                    
+                    elem.appendChild(wordSpan);
+                    
+                    if (i < words.length - 1) {
+                        const space = document.createTextNode(' ');
+                        elem.appendChild(space);
+                    }
+                });
+                
+                return this;
+            }
+        }
+    </script>
+</body>
+</html> 
